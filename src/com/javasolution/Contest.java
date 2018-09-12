@@ -62,12 +62,12 @@ public class Contest {
             for (int j = 0; j <= i; j++) {
                 if (S.charAt(i - 1) == 'I') {
                     for (int k = 0; k < j; ++k) {
-                        dp[i][j] += dp[i-1][k];
+                        dp[i][j] += dp[i - 1][k];
                         dp[i][j] %= MOD;
                     }
                 } else {
                     for (int k = j; k < i; ++k) {
-                        dp[i][j] += dp[i-1][k];
+                        dp[i][j] += dp[i - 1][k];
                         dp[i][j] %= MOD;
                     }
                 }

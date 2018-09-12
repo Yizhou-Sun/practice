@@ -3,10 +3,9 @@ package com.javasolution.structdesign;
 import java.util.Stack;
 
 /**
- * 901 https://leetcode.com/problems/online-stock-span/description/
- * Your StockSpanner object will be instantiated and called as such:
- * StockSpanner obj = new StockSpanner();
- * int param_1 = obj.next(price);
+ * 901 https://leetcode.com/problems/online-stock-span/description/ Your
+ * StockSpanner object will be instantiated and called as such: StockSpanner obj
+ * = new StockSpanner(); int param_1 = obj.next(price);
  */
 class StockSpanner {
     Stack<int[]> st;
@@ -20,8 +19,7 @@ class StockSpanner {
         while (!st.isEmpty() && st.peek()[0] <= price) {
             count += st.pop()[1];
         }
-        st.push(new int[]{price, count});
+        st.push(new int[] { price, count });
         return count;
     }
 }
-

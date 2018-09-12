@@ -25,9 +25,9 @@ class Solution:
                     dp[j][j + i] = True
 
                 if dp[j][j + i] and maxLen < i + 1:
-                        start = j
-                        end = j + i + 1
-                        maxLen = i + 1
+                    start = j
+                    end = j + i + 1
+                    maxLen = i + 1
         return s[start:end]
 
     # 4 https://leetcode.com/problems/median-of-two-sorted-arrays/description/

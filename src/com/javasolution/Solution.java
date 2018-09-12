@@ -718,13 +718,77 @@ public class Solution {
 
     // 29 https://leetcode.com/problems/divide-two-integers/description/
     public int divide(int dividend, int divisor) {
-        return 0;
+        int sign = 1;
+        if (dividend < 0 && divisor < 0)
+            sign = 1;
+        else if (dividend < 0 || divisor < 0)
+            sign = -1;
+
+        long ldividend = Math.abs((long) dividend);
+        long ldivisor = Math.abs((long) divisor);
+
+        long res = divideHelper(ldividend, ldivisor);
+
+        if ((sign == 1 && res > Integer.MAX_VALUE) || (sign == -1 && -res < Integer.MIN_VALUE)) {
+            return Integer.MAX_VALUE;
+        }
+
+        return (int) res * sign;
+    }
+
+    private long divideHelper(long dividend, long divisor) {
+        long sum = divisor;
+        long res = 1;
+
+        if (dividend < divisor)
+            return 0;
+        while (sum << 1 < dividend) {
+            sum = sum << 1;
+            res = 2 * res;
+        }
+        return res + divideHelper(dividend - sum, divisor);
     }
 
     // 30
     // https://leetcode.com/problems/substring-with-concatenation-of-all-words/description/
     public List<Integer> findSubstring(String s, String[] words) {
-        return null;
+        List<Integer> res = new LinkedList<>();
+        int n = words.length;
+
+        if (n == 0) // 0 words
+            return res;
+
+        int m = words[0].length();
+        int end = s.length() - m * n;
+        if (end < 0) // s too short
+            return res;
+
+        Map<String, Integer> map = new HashMap<>();
+        for (String w : words) {
+            map.put(w, map.getOrDefault(w, 0) + 1);
+        }
+
+        for (int i = 0; i < end; i++) {
+            Map<String, Integer> seen = new HashMap<>();
+            int j = 0;
+            while (j < n) {
+                String word = s.substring(i + j * m, i + (j + 1) * m);
+                if (map.containsKey(word)) {
+                    seen.put(word, seen.getOrDefault(word, 0) + 1);
+                    if (seen.get(word) > map.getOrDefault(word, 0)) {
+                        break;
+                    }
+                } else {
+                    break;
+                }
+                j++;
+            }
+
+            if (j == n) {
+                res.add(i);
+            }
+        }
+        return res;
     }
 
     // 31 https://leetcode.com/problems/next-permutation/description/

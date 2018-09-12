@@ -17,13 +17,16 @@ public class Trie {
     /** Inserts a word into the trie. */
     public void insert(String word) {
         int wordLen = word.length();
-        if (wordLen == 0) return;
+        if (wordLen == 0)
+            return;
 
         char c = word.charAt(0);
         if (nextLevel[c - 'a'] == null)
             nextLevel[c - 'a'] = new Trie();
-        insertHelper(word, 1, wordLen, nextLevel[c - 'a']);;
+        insertHelper(word, 1, wordLen, nextLevel[c - 'a']);
+        ;
     }
+
     private void insertHelper(String word, int i, int wordLen, Trie root) {
         if (i == wordLen) {
             root.hasWord = true;
@@ -38,7 +41,8 @@ public class Trie {
     /** Returns if the word is in the trie. */
     public boolean search(String word) {
         int wordLen = word.length();
-        if (wordLen == 0) return false;
+        if (wordLen == 0)
+            return false;
 
         char c = word.charAt(0);
         if (nextLevel[c - 'a'] == null) {
@@ -46,6 +50,7 @@ public class Trie {
         }
         return searchHelper(word, 1, wordLen, nextLevel[c - 'a']);
     }
+
     private boolean searchHelper(String word, int i, int wordLen, Trie root) {
         if (i == wordLen) {
             return root.hasWord;
@@ -58,10 +63,13 @@ public class Trie {
         return searchHelper(word, i + 1, wordLen, root.nextLevel[c - 'a']);
     }
 
-    /** Returns if there is any word in the trie that starts with the given prefix. */
+    /**
+     * Returns if there is any word in the trie that starts with the given prefix.
+     */
     public boolean startsWith(String prefix) {
         int wordLen = prefix.length();
-        if (wordLen == 0) return false;
+        if (wordLen == 0)
+            return false;
 
         char c = prefix.charAt(0);
         if (nextLevel[c - 'a'] == null) {
@@ -69,9 +77,11 @@ public class Trie {
         }
         return startsWithHelper(prefix, 1, wordLen, nextLevel[c - 'a']);
     }
+
     private boolean startsWithHelper(String prefix, int i, int wordLen, Trie root) {
         if (i == wordLen) {
-            if (root.hasWord) return true;
+            if (root.hasWord)
+                return true;
             for (Trie node : root.nextLevel) {
                 if (node != null) {
                     return true;
@@ -88,9 +98,7 @@ public class Trie {
 }
 
 /**
- * Your Trie object will be instantiated and called as such:
- * Trie obj = new Trie();
- * obj.insert(word);
- * boolean param_2 = obj.search(word);
- * boolean param_3 = obj.startsWith(prefix);
+ * Your Trie object will be instantiated and called as such: Trie obj = new
+ * Trie(); obj.insert(word); boolean param_2 = obj.search(word); boolean param_3
+ * = obj.startsWith(prefix);
  */

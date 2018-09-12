@@ -29,14 +29,17 @@ public class WordDictionary {
     /** Adds a word into the data structure. */
     public void addWord(String word) {
         int wordLen = word.length();
-        if (wordLen == 0) return;
+        if (wordLen == 0)
+            return;
 
         char c = word.charAt(0);
         if (nextLevel[c - 'a'] == null)
             nextLevel[c - 'a'] = new WordDictionary();
 
-        addWordHelper(word, 1, wordLen, nextLevel[c - 'a']);;
+        addWordHelper(word, 1, wordLen, nextLevel[c - 'a']);
+        ;
     }
+
     private void addWordHelper(String word, int i, int wordLen, WordDictionary root) {
         if (i == wordLen) {
             root.hasWord = true;
@@ -50,10 +53,14 @@ public class WordDictionary {
         addWordHelper(word, i + 1, wordLen, root.nextLevel[c - 'a']);
     }
 
-    /** Returns if the word is in the data structure. A word could contain the dot character '.' to represent any one letter. */
+    /**
+     * Returns if the word is in the data structure. A word could contain the dot
+     * character '.' to represent any one letter.
+     */
     public boolean search(String word) {
         int wordLen = word.length();
-        if (wordLen == 0) return false;
+        if (wordLen == 0)
+            return false;
 
         char c = word.charAt(0);
         if (c != '.') {
@@ -69,6 +76,7 @@ public class WordDictionary {
         }
         return false;
     }
+
     private boolean searchHelper(String word, int i, int wordLen, WordDictionary root) {
         if (i == wordLen) {
             return root.hasWord;
@@ -92,7 +100,6 @@ public class WordDictionary {
 
 /**
  * Your WordDictionary object will be instantiated and called as such:
- * WordDictionary obj = new WordDictionary();
- * obj.addWord(word);
- * boolean param_2 = obj.search(word);
+ * WordDictionary obj = new WordDictionary(); obj.addWord(word); boolean param_2
+ * = obj.search(word);
  */

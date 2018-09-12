@@ -1,11 +1,9 @@
 package com.javasolution.structdesign;
 
-
 /**
- * 900 https://leetcode.com/problems/rle-iterator/description/
- * Your RLEIterator object will be instantiated and called as such:
- * RLEIterator obj = new RLEIterator(A);
- * int param_1 = obj.next(n);
+ * 900 https://leetcode.com/problems/rle-iterator/description/ Your RLEIterator
+ * object will be instantiated and called as such: RLEIterator obj = new
+ * RLEIterator(A); int param_1 = obj.next(n);
  */
 public class RLEIterator {
     int[] arr;
@@ -28,5 +26,3 @@ public class RLEIterator {
         return -1;
     }
 }
-
-
