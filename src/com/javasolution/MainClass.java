@@ -8,7 +8,7 @@ import com.javasolution.util.*;
 public class MainClass {
     public static void main(String[] args) {
         // int num = 231;
-        // int[] nums = {1,8,6,2,5,4,8,3,7};
+        int[] nums = {1,5,1};
         // int[][] twodArr = {{2,9,10}, {3,7,15}, {5,12,12}, {15,20,10}, {19,24,8}};
         // String s = "AAAAACCCCCAAAAACCCCCCAAAAAGGGTTT";
         // List<String> strList = Arrays.asList("hot","dot","dog","lot","log","cog");
@@ -16,10 +16,15 @@ public class MainClass {
         // TreeNode root = stringToTreeNode("[5,3,6,2,4,null,null,1]");
         // var nums1 = new int[] {1,3};
         // var nums2 = new int[] {2};
+        String[] strArr = {"1", "3", "5", "7"};
 
         Solution solution = new Solution();
-        var res = solution.generateParenthesis(4);
+        var res = "A";
+        solution.nextPermutation(nums);
         System.out.println(res);
+        for (int i : nums) {
+            System.out.println(i);
+        }
     }
     public static TreeNode stringToTreeNode(String input) {
         input = input.trim();

@@ -595,25 +595,175 @@ public class Solution {
             cur.next = pq.poll();
             cur = cur.next;
         }
+        cur.next = null;
+        return dummy.next;
+    }
+    // private ListNode mergeKListsHelper(ListNode[] lists) {
+    // int minV = Integer.MAX_VALUE;
+    // int index = 0;
+    // for (int i = 0; i < lists.length; i++) {
+    // if (lists[i] != null && lists[i].val < minV) {
+    // index = i;
+    // minV = lists[i].val;
+    // }
+    // }
+    // if (minV == Integer.MAX_VALUE) {
+    // return null;
+    // } else {
+    // ListNode l = lists[index];
+    // lists[index] = lists[index].next;
+    // l.next = mergeKListsHelper(lists);
+    // return l;
+    // }
+    // }
+
+    // 24 https://leetcode.com/problems/swap-nodes-in-pairs/description/
+    public ListNode swapPairs(ListNode head) {
+        if (head == null || head.next == null)
+            return head;
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        ListNode pre = dummy;
+        ListNode cur = head;
+        ListNode next = cur.next;
+
+        while (cur != null && next != null) {
+            pre.next = next;
+            cur.next = next.next;
+            next.next = cur;
+
+            pre = cur;
+            cur = cur.next;
+            if (cur == null)
+                break;
+            next = cur.next;
+        }
         return dummy.next;
     }
 
-    private ListNode mergeKListsHelper(ListNode[] lists) {
-        int minV = Integer.MAX_VALUE;
-        int index = 0;
-        for (int i = 0; i < lists.length; i++) {
-            if (lists[i] != null && lists[i].val < minV) {
-                index = i;
-                minV = lists[i].val;
+    // 25 https://leetcode.com/problems/reverse-nodes-in-k-group/description/
+    // Note: Don't use stack !!!
+    public ListNode reverseKGroup(ListNode head, int k) {
+        Stack<ListNode> st = new Stack<>();
+        int i = 0;
+        ListNode cur = head;
+
+        while (i < k && cur != null) {
+            st.push(cur);
+            cur = cur.next;
+            i++;
+        }
+        if (i == k) {
+            ListNode next = reverseKGroup(cur, k);
+            head = st.pop();
+            cur = head;
+            while (!st.isEmpty()) {
+                cur.next = st.pop();
+                cur = cur.next;
+            }
+            cur.next = next;
+        }
+        return head;
+    }
+
+    // 26
+    // https://leetcode.com/problems/remove-duplicates-from-sorted-array/description/
+    public int removeDuplicates(int[] nums) {
+        if (nums.length == 0)
+            return 0;
+
+        int cur = 0;
+        int index = cur + 1;
+        while (index < nums.length) {
+            if (nums[cur] != nums[index]) {
+                cur++;
+                nums[cur] = nums[index];
+            }
+            index++;
+        }
+        return cur + 1;
+    }
+
+    // 27 https://leetcode.com/problems/remove-element/description/
+    public int removeElement(int[] nums, int val) {
+        int i = -1, j = nums.length - 1;
+        while (i < j) {
+            if (nums[i + 1] != val) {
+                i++;
+            } else if (nums[j] == val) {
+                j--;
+            } else {
+                nums[i + 1] = nums[j];
+                i++;
+                j--;
             }
         }
-        if (minV == Integer.MAX_VALUE) {
-            return null;
-        } else {
-            ListNode l = lists[index];
-            lists[index] = lists[index].next;
-            l.next = mergeKListsHelper(lists);
-            return l;
+        return i + 1;
+    }
+
+    // 28 https://leetcode.com/problems/implement-strstr/description/
+    // Note: Next time, use KMP!
+    public int strStr(String haystack, String needle) {
+        int lenN = needle.length();
+        int lenH = haystack.length();
+
+        int i = 0;
+        while (i + lenN <= lenH) {
+            if (needle.equals(haystack.substring(i, i + lenN)))
+                return i;
+            i++;
         }
+        return -1;
+    }
+
+    // 29 https://leetcode.com/problems/divide-two-integers/description/
+    public int divide(int dividend, int divisor) {
+        return 0;
+    }
+
+    // 30
+    // https://leetcode.com/problems/substring-with-concatenation-of-all-words/description/
+    public List<Integer> findSubstring(String s, String[] words) {
+        return null;
+    }
+
+    // 31 https://leetcode.com/problems/next-permutation/description/
+    // TODO: ......
+    public void nextPermutation(int[] nums) {
+        int i = nums.length - 1;
+        while (i > 0 && nums[i] <= nums[i - 1]) {
+            i--;
+        }
+        if (i == 0) {
+            reverseArr(nums, 0, nums.length);
+            return;
+        }
+        i--;
+        int j = nums.length - 1;
+        while (j >= i && nums[j] <= nums[i]) {
+            j--;
+        }
+        swap(nums, i, j);
+        reverseArr(nums, i + 1, nums.length);
+    }
+
+    private void reverseArr(int[] nums, int start, int end) {
+        int i = start, j = end - 1;
+        while (i < j) {
+            swap(nums, i, j);
+            i++;
+            j--;
+        }
+    }
+
+    private void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+
+    // 30 https://leetcode.com/problems/longest-valid-parentheses/description/
+    public int longestValidParentheses(String s) {
+        return 0;
     }
 }
