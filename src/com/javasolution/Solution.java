@@ -759,32 +759,28 @@ public class Solution {
             return res;
 
         int m = words[0].length();
-        int end = s.length() - m * n;
+        int end = s.length() - m * n + 1;
         if (end < 0) // s too short
             return res;
 
-        Map<String, Integer> map = new HashMap<>();
+        Map<String, Integer> record = new HashMap<>();
         for (String w : words) {
-            map.put(w, map.getOrDefault(w, 0) + 1);
+            record.put(w, record.getOrDefault(w, 0) + 1);
         }
 
         for (int i = 0; i < end; i++) {
-            Map<String, Integer> seen = new HashMap<>();
-            int j = 0;
-            while (j < n) {
-                String word = s.substring(i + j * m, i + (j + 1) * m);
-                if (map.containsKey(word)) {
-                    seen.put(word, seen.getOrDefault(word, 0) + 1);
-                    if (seen.get(word) > map.getOrDefault(word, 0)) {
-                        break;
-                    }
-                } else {
+            Map<String, Integer> count = new HashMap<>();
+            int j = i;
+
+            while (j < i + m * n) {
+                String cur = s.substring(j, j + m);
+                count.put(cur, count.getOrDefault(cur, 0) + 1);
+                if (count.get(cur) > record.getOrDefault(cur, 0)) {
                     break;
                 }
-                j++;
+                j = j + m;
             }
-
-            if (j == n) {
+            if (j == i + m * n) {
                 res.add(i);
             }
         }
@@ -828,6 +824,21 @@ public class Solution {
 
     // 30 https://leetcode.com/problems/longest-valid-parentheses/description/
     public int longestValidParentheses(String s) {
-        return 0;
+        int res = 0;
+        int[] dp = new int[s.length() + 1];
+
+        for (int i = 2; i <= s.length(); i++) {
+            if (s.charAt(i - 1) == '(') {
+                dp[i] = 0;
+            } else {
+                if (s.charAt(i - 2) == '(') {
+                    dp[i] = dp[i - 2] + 2;
+                } else if (i - 2 - dp[i - 1] > -1 && s.charAt(i - 2 - dp[i - 1]) == '(') {
+                    dp[i] = dp[i - 1] + 2 + dp[i - 2 - dp[i - 1]];
+                }
+            }
+            res = Math.max(dp[i], res);
+        }
+        return res;
     }
 }
