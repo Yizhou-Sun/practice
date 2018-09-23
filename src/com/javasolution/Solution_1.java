@@ -6,7 +6,7 @@ import java.lang.*;
 import com.javasolution.util.*;
 import com.javasolution.structdesign.*;
 
-public class Solution {
+public class Solution_1 {
     // 1 https://leetcode.com/problems/two-sum/description/
     public int[] twoSum(int[] nums, int target) {
         HashMap<Integer, Integer> map = new HashMap<>();
@@ -822,7 +822,7 @@ public class Solution {
         nums[j] = temp;
     }
 
-    // 30 https://leetcode.com/problems/longest-valid-parentheses/description/
+    // 32 https://leetcode.com/problems/longest-valid-parentheses/description/
     public int longestValidParentheses(String s) {
         int res = 0;
         int[] dp = new int[s.length() + 1];
