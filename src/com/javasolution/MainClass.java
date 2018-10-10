@@ -8,8 +8,9 @@ import com.javasolution.util.*;
 public class MainClass {
     public static void main(String[] args) {
         // int num = 231;
-        int[] nums = {48,87,27};
-        // int[][] twodArr = {{2,9,10}, {3,7,15}, {5,12,12}, {15,20,10}, {19,24,8}};
+        // int[] nums = { 48, 87, 27 };
+        int[][] twodArr = { { 47, 220 }, { 65, 1 }, { 98, 113 }, { 126, 196 }, { 186, 218 }, { 320, 205 }, { 686, 317 },
+                { 707, 325 }, { 754, 104 }, { 781, 105 } };
         // String s = "AAAAACCCCCAAAAACCCCCCAAAAAGGGTTT";
         // List<String> strList = Arrays.asList("hot","dot","dog","lot","log","cog");
         // char[][] grid =
@@ -17,14 +18,12 @@ public class MainClass {
         // TreeNode root = stringToTreeNode("[5,3,6,2,4,null,null,1]");
         // var nums1 = new int[] {1,3};
         // var nums2 = new int[] {2};
-        // String[] strArr = { "1", "3", "5", "7" };
+        // String[] strArr = { "@...a" , ".###A", "b.BCc" };
 
-        var solution = new Solution_18();
-        // var res = solution.largestCommonDivisor(6,4);
-        int i = 0;
-        System.out.println(i++);
-        System.out.println(++i);
+        Solution_18 solution = new Solution_18();
+        int res = solution.minRefuelStops(1000, 83, twodArr);
 
+        System.out.println(res);
     }
 
     public static TreeNode stringToTreeNode(String input) {
