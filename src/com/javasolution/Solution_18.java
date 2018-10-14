@@ -714,6 +714,268 @@ public class Solution_18 {
         return res;
     }
 
+    // 882
+    // https://leetcode.com/problems/reachable-nodes-in-subdivided-graph/description/
+    // TODO Must redo this question!
+    public int reachableNodes(int[][] edges, int M, int N) {
+        int[][] graph = new int[N][N];
+
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                graph[i][j] = -1;
+            }
+        }
+        for (int i = 0; i < edges.length; i++) {
+            graph[edges[i][0]][edges[i][1]] = edges[i][2];
+            graph[edges[i][1]][edges[i][0]] = edges[i][2];
+        }
+
+        int res = 0;
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> (b[1] - a[1]));
+        boolean[] visited = new boolean[N];
+        pq.offer(new int[] { 0, M });
+
+        while (!pq.isEmpty()) {
+            int[] cur = pq.poll();
+            int start = cur[0];
+            int move = cur[1];
+            if (visited[start]) {
+                continue;
+            }
+            visited[start] = true;
+            result++;
+            for (int i = 0; i < N; i++) {
+                if (graph[start][i] != -1) {
+                    if (move > graph[start][i] && !visited[i]) {
+                        pq.offer(new int[] { i, move - graph[start][i] - 1 });
+                    }
+                    graph[i][start] -= Math.min(move, graph[start][i]);
+                    result += Math.min(move, graph[start][i]);
+                }
+            }
+        }
+        return result;
+    }
+
+    // 883 https://leetcode.com/problems/projection-area-of-3d-shapes/description/
+    public int projectionArea(int[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+        int res = 0;
+        // xy
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] != 0) {
+                    res = res + 1;
+                }
+            }
+        }
+        // yz
+        for (int i = 0; i < n; i++) {
+            int high = 0;
+            for (int j = 0; j < m; j++) {
+                high = Math.max(high, grid[j][i]);
+            }
+            res = res + high;
+        }
+        // zx
+        for (int i = 0; i < m; i++) {
+            int high = 0;
+            for (int j = 0; j < n; j++) {
+                high = Math.max(high, grid[i][j]);
+            }
+            res = res + high;
+        }
+        return res;
+    }
+
+    // 884
+    // https://leetcode.com/problems/uncommon-words-from-two-sentences/description/
+    public String[] uncommonFromSentences(String A, String B) {
+        Set<String> res = new HashSet<>();
+        Set<String> wordSet = new HashSet<>();
+
+        for (String s : A.split(" ")) {
+            if (wordSet.contains(s)) {
+                res.remove(s);
+            } else {
+                res.add(s);
+                wordSet.add(s);
+            }
+        }
+        for (String s : B.split(" ")) {
+            if (wordSet.contains(s)) {
+                res.remove(s);
+            } else {
+                res.add(s);
+                wordSet.add(s);
+            }
+        }
+        return (String[]) res.toArray();
+    }
+
+    // 885 https://leetcode.com/problems/spiral-matrix-iii/description/
+    public int[][] spiralMatrixIII(int R, int C, int r0, int c0) {
+        int[][] direction = new int[][] { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
+        List<int[]> res = new LinkedList<>();
+        int n = R * C;
+        int r = r0;
+        int c = c0;
+        int len = 1;
+        int count = 0;
+        int i = 0;
+        int d = 0;
+
+        while (res.size() != n) {
+            if (r >= 0 && r < R && c >= 0 && c < C)
+                res.add(new int[] { r, c });
+
+            r += direction[d][0];
+            c += direction[d][1];
+            i++;
+            if (i == len) {
+                i = 0;
+                d = (d + 1) % 4;
+                count++;
+                if (count == 2) {
+                    len += 1;
+                    count = 0;
+                }
+            }
+        }
+        return res.toArray(new int[0][0]);
+    }
+
+    // 886 https://leetcode.com/problems/possible-bipartition/description/
+    public boolean possibleBipartition(int N, int[][] dislikes) {
+        boolean[][] graph = new boolean[N + 1][N + 1];
+        boolean[] visited = new boolean[N + 1];
+        Set<Integer> group1 = new HashSet<>();
+        Set<Integer> group2 = new HashSet<>();
+
+        for (int[] dislike : dislikes) {
+            graph[dislike[0]][dislike[1]] = true;
+            graph[dislike[1]][dislike[0]] = true;
+        }
+        for (int i = 1; i <= N; i++) {
+            if (!dfsBipartition(graph, i, group1, group2, visited)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean dfsBipartition(boolean[][] graph, int node, Set<Integer> cur, Set<Integer> next,
+            boolean[] visited) {
+        if (visited[node]) {
+            return true;
+        }
+        visited[node] = true;
+        cur.add(node);
+        boolean[] edges = graph[node];
+        for (int i = 1; i < graph.length; i++) {
+            if (edges[i]) {
+                if (cur.contains(i) || (!dfsBipartition(graph, i, next, cur, visited))) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    // 887 https://leetcode.com/problems/super-egg-drop/description/
+    public int superEggDrop(int K, int N) {
+        int[][] dp = new int[N + 1][K + 1];
+        int res = 0;
+        while (dp[res][K] < N) {
+            res++;
+            for (int k = 1; k <= K; ++k)
+                dp[res][k] = dp[res - 1][k - 1] + dp[res - 1][k] + 1;
+        }
+        return res;
+    }
+
+    // 888 https://leetcode.com/problems/fair-candy-swap/description/
+    public int[] fairCandySwap(int[] A, int[] B) {
+        int sumA = 0, sumB = 0;
+        Set<Integer> setA = new HashSet<>();
+        for (int i : A) {
+            sumA += i;
+            setA.add(i);
+        }
+        for (int i : B) {
+            sumB += i;
+        }
+        int target = (sumA + sumB) / 2 - sumA;
+        for (int i : B) {
+            if (setA.contains(i - target)) {
+                return new int[] { i - target, i };
+            }
+        }
+        return null;
+    }
+
+    // 889
+    // https://leetcode.com/problems/construct-binary-tree-from-preorder-and-postorder-traversal/description/
+    public TreeNode constructFromPrePost(int[] pre, int[] post) {
+        return buildTreeHelper(pre, 0, pre.length, post, 0, post.length);
+    }
+
+    private TreeNode buildTreeHelper(int[] pre, int i, int j, int[] post, int m, int n) {
+        TreeNode root = new TreeNode(pre[i]);
+        if (i == j - 1)
+            return root;
+        if (pre[i + 1] == post[n - 2]) {
+            root.left = buildTreeHelper(pre, i + 1, j, post, m, n - 1);
+        } else {
+            int v1 = pre[i + 1];
+            int v2 = post[n - 2];
+            for (int k = i; k < j; k++) {
+                if (pre[k] == v2) {
+                    v2 = k;
+                    break;
+                }
+            }
+            for (int k = m; k < n; k++) {
+                if (post[k] == v1) {
+                    v1 = k;
+                    break;
+                }
+            }
+            root.left = buildTreeHelper(pre, i + 1, v2, post, m, v1 + 1);
+            root.right = buildTreeHelper(pre, v2, j, post, v1 + 1, n - 1);
+        }
+        return root;
+    }
+
+    // 890 https://leetcode.com/problems/find-and-replace-pattern/description/
+    public List<String> findAndReplacePattern(String[] words, String pattern) {
+        List<String> res = new LinkedList<>();
+        for (String s : words) {
+            if (isMatching(s, pattern)) {
+                res.add(s);
+            }
+        }
+        return res;
+    }
+
+    private boolean isMatching(String s, String pattern) {
+        Map<Character, Character> map = new HashMap<>();
+        Set<Character> used = new HashSet<>();
+
+        for (int i = 0; i < pattern.length(); i++) {
+            Character c1 = pattern.charAt(i);
+            Character c2 = s.charAt(i);
+            if (map.containsKey(c1) && map.get(c1) != c2)
+                return false;
+            if (!map.containsKey(c1) && used.contains(c2))
+                return false;
+            map.put(c1, c2);
+            used.add(c2);
+        }
+        return true;
+    }
+
     // 902
     // https://leetcode.com/problems/numbers-at-most-n-given-digit-set/description/
     // TODO: Review!!!
