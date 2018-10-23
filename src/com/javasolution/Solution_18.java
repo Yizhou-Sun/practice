@@ -743,18 +743,18 @@ public class Solution_18 {
                 continue;
             }
             visited[start] = true;
-            result++;
+            res++;
             for (int i = 0; i < N; i++) {
                 if (graph[start][i] != -1) {
                     if (move > graph[start][i] && !visited[i]) {
                         pq.offer(new int[] { i, move - graph[start][i] - 1 });
                     }
                     graph[i][start] -= Math.min(move, graph[start][i]);
-                    result += Math.min(move, graph[start][i]);
+                    res += Math.min(move, graph[start][i]);
                 }
             }
         }
-        return result;
+        return res;
     }
 
     // 883 https://leetcode.com/problems/projection-area-of-3d-shapes/description/
@@ -976,6 +976,207 @@ public class Solution_18 {
         return true;
     }
 
+    // 891 https://leetcode.com/problems/sum-of-subsequence-widths/description/
+    public int sumSubseqWidths(int[] A) {
+        int Mod = (int) 1e9 + 7;
+        long res = 0;
+
+        Arrays.sort(A);
+        long combination = 1;
+        for (int i = 0; i < A.length; ++i, combination = (combination << 1) % Mod) {
+            res = (res + A[i] * combination - A[A.length - i - 1] * combination) % Mod;
+        }
+        return (int) res;
+    }
+
+    // 892 https://leetcode.com/problems/surface-area-of-3d-shapes/description/
+    public int surfaceArea(int[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+        int res = 0;
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                int v = grid[i][j];
+
+                if (v > 0)
+                    res += 2;
+
+                if (i == 0) {
+                    res += v;
+                } else {
+                    res += Math.abs(v - grid[i - 1][j]);
+                }
+
+                if (j == 0) {
+                    res += v;
+                } else {
+                    res += Math.abs(v - grid[i][j - 1]);
+                }
+            }
+        }
+        for (int i = 0; i < m; i++) {
+            res += grid[i][n - 1];
+        }
+        for (int i = 0; i < n; i++) {
+            res += grid[m - 1][i];
+        }
+        return res;
+    }
+
+    // 893
+    // https://leetcode.com/problems/groups-of-special-equivalent-strings/description/
+    public int numSpecialEquivGroups(String[] A) {
+        boolean[] choosed = new boolean[A.length];
+
+        int res = 0;
+
+        for (int i = 0; i < A.length; i++) {
+            if (choosed[i])
+                continue;
+            res += 1;
+            for (int j = i + 1; j < A.length; j++) {
+                if (choosed[j])
+                    continue;
+                if (isEquivGroups(A[i], A[j]))
+                    choosed[j] = true;
+            }
+        }
+        return res;
+    }
+
+    private boolean isEquivGroups(String a, String b) {
+        int[] even = new int[26];
+        int[] odd = new int[26];
+
+        for (int i = 0; i < a.length(); i++) {
+            if (i % 2 == 0) {
+                even[a.charAt(i) - 'a'] += 1;
+                even[b.charAt(i) - 'a'] -= 1;
+            } else {
+                odd[a.charAt(i) - 'a'] += 1;
+                odd[b.charAt(i) - 'a'] -= 1;
+            }
+        }
+        for (int i = 0; i < 26; i++) {
+            if (even[i] != 0 || odd[i] != 0)
+                return false;
+        }
+        return true;
+    }
+
+    // 894 https://leetcode.com/problems/all-possible-full-binary-trees/description/
+    public List<TreeNode> allPossibleFBT(int N) {
+        List<TreeNode> res = new LinkedList<>();
+        if (N % 2 == 0)
+            return res;
+        if (N == 1) {
+            res.add(new TreeNode(0));
+            return res;
+        }
+
+        N -= 1;
+        for (int i = 1; i < N; i += 2) {
+            List<TreeNode> l1 = allPossibleFBT(i);
+            List<TreeNode> l2 = allPossibleFBT(N - i);
+            for (TreeNode n : l1) {
+                for (TreeNode m : l2) {
+                    TreeNode root = new TreeNode(0);
+                    root.left = n;
+                    root.right = m;
+                    res.add(root);
+                }
+            }
+        }
+        return res;
+    }
+
+    // 895 https://leetcode.com/problems/maximum-frequency-stack/description/
+    // javasolution.structdesign
+
+    // 896 https://leetcode.com/problems/monotonic-array/description/
+    public boolean isMonotonic(int[] A) {
+        int type = 0;
+
+        for (int i = 0; i < A.length - 1; i++) {
+            if (A[i] == A[i + 1])
+                continue;
+
+            if (A[i] > A[i + 1]) {
+                if (type == 1)
+                    return false;
+                type = -1;
+            }
+            if (A[i] < A[i + 1]) {
+                if (type == -1)
+                    return false;
+                type = 1;
+            }
+        }
+        return true;
+    }
+
+    // 897 https://leetcode.com/problems/increasing-order-search-tree/description/
+    public TreeNode increasingBST(TreeNode root) {
+        if (root == null)
+            return root;
+
+        TreeNode dummy = new TreeNode(0);
+        TreeNode p = dummy, cur = root;
+        Stack<TreeNode> st = new Stack<>();
+
+        while (cur != null || st.size() > 0) {
+            while (cur != null) {
+                st.push(cur);
+                cur = cur.left;
+            }
+            cur = st.pop();
+            p.left = null;
+            p.right = cur;
+            p = p.right;
+            cur = cur.right;
+        }
+        p.left = null;
+        p.right = null;
+        return dummy.right;
+    }
+
+    // 898 https://leetcode.com/problems/bitwise-ors-of-subarrays/description/
+    // TODO: I don't know the how to come out this solution
+    public int subarrayBitwiseORs(int[] A) {
+        Set<Integer> res = new HashSet<>(), cur = new HashSet<>(), cur2;
+        for (Integer i : A) {
+            cur2 = new HashSet<>();
+            cur2.add(i);
+            for (Integer j : cur)
+                cur2.add(i | j);
+            res.addAll(cur = cur2);
+        }
+        return res.size();
+    }
+
+    // 899 https://leetcode.com/problems/orderly-queue/description/
+    public String orderlyQueue(String S, int K) {
+        if (K > 1) {
+            char[] charArr = S.toCharArray();
+            Arrays.sort(charArr);
+            return new String(charArr);
+        }
+        String res = S;
+        for (int i = 1; i < S.length(); i++) {
+            String tmp = S.substring(i) + S.substring(0, i);
+            if (res.compareTo(tmp) > 0)
+                res = tmp;
+        }
+        return res;
+    }
+
+    // 900 https://leetcode.com/problems/rle-iterator/description/
+    // javasolution.structdesign
+
+    // 901 https://leetcode.com/problems/online-stock-span/description/
+    // javasolution.structdesign
+
     // 902
     // https://leetcode.com/problems/numbers-at-most-n-given-digit-set/description/
     // TODO: Review!!!
@@ -1145,30 +1346,5 @@ public class Solution_18 {
             }
         }
         return true;
-    }
-
-    // 907 https://leetcode.com/problems/sum-of-subarray-minimums/description/
-    public int sumSubarrayMins(int[] A) {
-        int MOD = (int) (1e9 + 7);
-        int res = 0;
-        int[] leftLen = new int[A.length];
-        Stack<int[]> stl = new Stack<>();
-        int[] rightLen = new int[A.length];
-        Stack<int[]> str = new Stack<>();
-        for (int i = 0; i < A.length; i++) {
-            leftLen[i] = 1;
-            while (!stl.isEmpty() && stl.peek()[0] > A[i])
-                leftLen[i] += stl.pop()[1];
-            stl.push(new int[] { A[i], leftLen[i] });
-        }
-        for (int i = A.length - 1; i >= 0; i--) {
-            rightLen[i] = 1;
-            while (!str.isEmpty() && str.peek()[0] >= A[i])
-                rightLen[i] += str.pop()[1];
-            str.push(new int[] { A[i], rightLen[i] });
-        }
-        for (int i = 0; i < A.length; ++i)
-            res = (res + A[i] * leftLen[i] * rightLen[i]) % MOD;
-        return res;
     }
 }
