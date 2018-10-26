@@ -263,4 +263,117 @@ public class Solution_19 {
 
         return new String(cArr);
     }
+
+    // 918 https://leetcode.com/problems/maximum-sum-circular-subarray/
+    public int maxSubarraySumCircular(int[] A) {
+        int sum = 0;
+        for (int i : A)
+            sum += i;
+
+        int curMin = A[0], min = A[0];
+        int curMax = A[0], max = A[0];
+        for (int i = 1; i < A.length; i++) {
+            curMin = Math.min(A[i], A[i] + curMin);
+            curMax = Math.max(A[i], A[i] + curMax);
+            min = Math.min(min, curMin);
+            max = Math.max(max, curMax);
+        }
+        return max > 0 ? Math.max(max, sum - min) : max;
+    }
+
+    // 920 https://leetcode.com/problems/complete-binary-tree-inserter/
+    // javasolution.structdesign
+
+    // 921 https://leetcode.com/problems/number-of-music-playlists
+    // public int numMusicPlaylists(int N, int L, int K) {
+    //
+    // }
+
+    // 922 https://leetcode.com/problems/minimum-add-to-make-parentheses-valid/
+    public int minAddToMakeValid(String S) {
+        int res = 0;
+        int left = 0;
+
+        for (int i = 0; i < S.length(); i++) {
+            if (S.charAt(i) == '(') {
+                left += 1;
+            } else {
+                if (left > 0)
+                    left -= 1;
+                else
+                    res++;
+            }
+        }
+        res += left;
+        return res;
+    }
+
+    // 923 https://leetcode.com/problems/sort-array-by-parity-ii/
+    public int[] sortArrayByParityII(int[] A) {
+        int i = 0, j = 1;
+
+        while (i < A.length && j < A.length) {
+            if (A[i] % 2 == 0) {
+                i += 2;
+            } else if (A[j] % 2 == 1) {
+                j += 2;
+            } else {
+                int tmp = A[i];
+                A[i] = A[j];
+                A[j] = tmp;
+            }
+        }
+
+        return A;
+    }
+
+    // 925 https://leetcode.com/problems/long-pressed-name/
+    public boolean isLongPressedName(String name, String typed) {
+        int i = 0, j = 0;
+
+        while (i < name.length() && j < typed.length()) {
+            if (name.charAt(i) == typed.charAt(j)) {
+                i++;
+                j++;
+                if (i < name.length() && name.charAt(i) == name.charAt(i - 1)) {
+                    continue;
+                }
+                while (j < typed.length() && typed.charAt(j) == typed.charAt(j - 1)) {
+                    j++;
+                }
+            } else {
+                return false;
+            }
+        }
+        if (i < name.length() || j < typed.length())
+            return false;
+        return true;
+    }
+
+    // 926 https://leetcode.com/problems/flip-string-to-monotone-increasing/
+    public int minFlipsMonoIncr(String S) {
+        int n = S.length();
+        int one = 0;
+        int zero = 0;
+
+        for (int i = 0; i < S.length(); i++) {
+            if (S.charAt(i) == '0')
+                zero++;
+            else
+                one++;
+        }
+
+        int res = zero;
+        int leftOne = 0;
+        int rightZero = zero;
+        for (int i = 0; i < S.length(); i++) {
+            if (S.charAt(i) == '0') {
+                rightZero -= 1;
+            } else {
+                leftOne += 1;
+            }
+            res = Math.min(res, rightZero + leftOne);
+        }
+        return res;
+    }
 }

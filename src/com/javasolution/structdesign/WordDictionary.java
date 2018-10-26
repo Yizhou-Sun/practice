@@ -20,13 +20,17 @@ public class WordDictionary {
     WordDictionary[] nextLevel;
     boolean hasWord;
 
-    /** Initialize your data structure here. */
+    /**
+     * Initialize your data structure here.
+     */
     public WordDictionary() {
         this.nextLevel = new WordDictionary[26];
         hasWord = false;
     }
 
-    /** Adds a word into the data structure. */
+    /**
+     * Adds a word into the data structure.
+     */
     public void addWord(String word) {
         int wordLen = word.length();
         if (wordLen == 0)

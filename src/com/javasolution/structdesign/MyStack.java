@@ -18,17 +18,23 @@ import java.util.Queue;
 class MyStack {
     Queue<Integer> myQ;
 
-    /** Initialize your data structure here. */
+    /**
+     * Initialize your data structure here.
+     */
     public MyStack() {
         myQ = new LinkedList<>();
     }
 
-    /** Push element x onto stack. */
+    /**
+     * Push element x onto stack.
+     */
     public void push(int x) {
         myQ.add(x);
     }
 
-    /** Removes the element on top of the stack and returns that element. */
+    /**
+     * Removes the element on top of the stack and returns that element.
+     */
     public int pop() {
         int size = myQ.size();
         for (int i = 0; i < size - 1; i++) {
@@ -37,7 +43,9 @@ class MyStack {
         return myQ.poll();
     }
 
-    /** Get the top element. */
+    /**
+     * Get the top element.
+     */
     public int top() {
         int size = myQ.size();
         for (int i = 0; i < size - 1; i++) {
@@ -48,7 +56,9 @@ class MyStack {
         return res;
     }
 
-    /** Returns whether the stack is empty. */
+    /**
+     * Returns whether the stack is empty.
+     */
     public boolean empty() {
         return myQ.isEmpty();
     }

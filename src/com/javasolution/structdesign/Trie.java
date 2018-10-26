@@ -8,13 +8,17 @@ public class Trie {
     public Trie[] nextLevel;
     public boolean hasWord;
 
-    /** Initialize your data structure here. */
+    /**
+     * Initialize your data structure here.
+     */
     public Trie() {
         this.nextLevel = new Trie[26];
         hasWord = false;
     }
 
-    /** Inserts a word into the trie. */
+    /**
+     * Inserts a word into the trie.
+     */
     public void insert(String word) {
         int wordLen = word.length();
         if (wordLen == 0)
@@ -38,7 +42,9 @@ public class Trie {
         insertHelper(word, i + 1, wordLen, root.nextLevel[c - 'a']);
     }
 
-    /** Returns if the word is in the trie. */
+    /**
+     * Returns if the word is in the trie.
+     */
     public boolean search(String word) {
         int wordLen = word.length();
         if (wordLen == 0)

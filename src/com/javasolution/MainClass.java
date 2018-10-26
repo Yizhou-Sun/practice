@@ -20,9 +20,8 @@ public class MainClass {
         // var nums2 = new int[] {2};
         // String[] strArr = { "@...a" , ".###A", "b.BCc" };
 
-        Solution_18 solution = new Solution_18();
-        int res = solution.minRefuelStops(1000, 83, twodArr);
-
+        Solution_19 solution = new Solution_19();
+        var res = solution.minFlipsMonoIncr("10011111110010111011");
         System.out.println(res);
     }
 

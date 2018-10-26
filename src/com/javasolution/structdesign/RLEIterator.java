@@ -6,8 +6,8 @@ package com.javasolution.structdesign;
  * RLEIterator(A); int param_1 = obj.next(n);
  */
 public class RLEIterator {
-    int[] arr;
-    int cur;
+    private int[] arr;
+    private int cur;
 
     public RLEIterator(int[] A) {
         arr = A;

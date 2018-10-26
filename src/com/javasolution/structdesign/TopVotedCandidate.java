@@ -1,6 +1,6 @@
 package com.javasolution.structdesign;
 
-import java.util.TreeMap;
+import java.util.*;
 
 class TopVotedCandidate {
     private HashMap<Integer, Integer> freqMap;
@@ -35,6 +35,6 @@ class TopVotedCandidate {
 
 /**
  * Your TopVotedCandidate object will be instantiated and called as such:
- * TopVotedCandidate obj = new TopVotedCandidate(persons, times);
- * int param_1 = obj.q(t);
+ * TopVotedCandidate obj = new TopVotedCandidate(persons, times); int param_1 =
+ * obj.q(t);
  */
