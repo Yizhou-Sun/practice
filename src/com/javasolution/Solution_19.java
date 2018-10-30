@@ -1,10 +1,8 @@
 package com.javasolution;
 
 import java.util.*;
-import java.lang.*;
 
 import com.javasolution.util.*;
-import com.javasolution.structdesign.*;
 
 public class Solution_19 {
     // 907 https://leetcode.com/problems/sum-of-subarray-minimums/description/
@@ -281,15 +279,29 @@ public class Solution_19 {
         return max > 0 ? Math.max(max, sum - min) : max;
     }
 
-    // 920 https://leetcode.com/problems/complete-binary-tree-inserter/
+    // 919 https://leetcode.com/problems/complete-binary-tree-inserter/
     // javasolution.structdesign
 
-    // 921 https://leetcode.com/problems/number-of-music-playlists
-    // public int numMusicPlaylists(int N, int L, int K) {
-    //
-    // }
+    // 920 https://leetcode.com/problems/number-of-music-playlists
+    // TODO: Emmm, patient
+    public int numMusicPlaylists(int N, int L, int K) {
+        long MOD = (long) 1e9 + 7;
+        long[][] dp = new long[N + 1][L + 1];
+        for (int i = K + 1; i <= N; ++i)
+            for (int j = i; j <= L; ++j)
+                if ((i == j) || (i == K + 1))
+                    dp[i][j] = factorial(i);
+                else
+                    dp[i][j] = (dp[i - 1][j - 1] * i + dp[i][j - 1] * (i - K)) % MOD;
+        return (int) dp[N][L];
+    }
 
-    // 922 https://leetcode.com/problems/minimum-add-to-make-parentheses-valid/
+    private long factorial(int n) {
+        long MOD = (long) 1e9 + 7;
+        return n > 0 ? factorial(n - 1) * n % MOD : 1;
+    }
+
+    // 921 https://leetcode.com/problems/minimum-add-to-make-parentheses-valid/
     public int minAddToMakeValid(String S) {
         int res = 0;
         int left = 0;
@@ -308,7 +320,7 @@ public class Solution_19 {
         return res;
     }
 
-    // 923 https://leetcode.com/problems/sort-array-by-parity-ii/
+    // 922 https://leetcode.com/problems/sort-array-by-parity-ii/
     public int[] sortArrayByParityII(int[] A) {
         int i = 0, j = 1;
 
@@ -325,6 +337,102 @@ public class Solution_19 {
         }
 
         return A;
+    }
+
+    // 923 https://leetcode.com/problems/3sum-with-multiplicity/
+    public int threeSumMulti(int[] A, int target) {
+        int res = 0;
+        int MOD = 1000000007;
+        int[] freq = new int[101];
+
+        for (int a : A) {
+            freq[a] += 1;
+        }
+
+        for (int i = 0; i < 101; i++) {
+            int n = freq[i];
+            if (n == 0)
+                continue;
+
+            if (n >= 3 && 3 * i == target) {
+                System.out.println(combination(n, 3));
+                res = (res + combination(n, 3)) % MOD;
+            }
+            if (n >= 2 && 2 * i <= target && target - 2 * i < 101) {
+                if (target - 2 * i != i)
+                    res = (res + combination(n, 2) * freq[target - 2 * i]) % MOD;
+            }
+            if (n >= 1) {
+                for (int j = i + 1; j < 101; j++) {
+                    if (freq[j] == 0)
+                        continue;
+                    for (int k = j + 1; k < 101; k++) {
+                        if (freq[k] == 0)
+                            continue;
+                        if (i + j + k > target)
+                            break;
+                        if (i + j + k == target) {
+                            res = (res + n * freq[j] * freq[k]) % MOD;
+                        }
+                    }
+                }
+            }
+        }
+
+        return res;
+    }
+
+    private int combination(int n, int r) {
+        long numerator = 1;
+        long denominator = 1;
+
+        for (int i = n; i > (n - r); i--) {
+            numerator = (numerator * i);
+        }
+        for (int i = 1; i <= r; i++) {
+            denominator = denominator * i;
+        }
+        return (int) ((numerator / denominator) % 1000000007);
+    }
+
+    // 924 https://leetcode.com/problems/minimize-malware-spread/
+    public int minMalwareSpread_1(int[][] graph, int[] initial) {
+        Map<Integer, Integer> infected = new HashMap<>();
+
+        for (int i = 0; i < initial.length; i++) {
+
+            Set<Integer> visited = new HashSet<>();
+
+            for (int j = 0; j < initial.length; j++) {
+                if (j == i)
+                    continue;
+                minMalwareSpreadHelper_1(graph, visited, initial[i], initial[j]);
+            }
+            infected.put(initial[i], visited.size());
+        }
+
+        int Minitial = Integer.MAX_VALUE;
+        int res = Integer.MAX_VALUE;
+        for (Map.Entry<Integer, Integer> entry : infected.entrySet()) {
+            if (entry.getValue() < Minitial) {
+                Minitial = entry.getValue();
+                res = entry.getKey();
+            } else if (entry.getValue() == Minitial) {
+                res = Math.min(res, entry.getKey());
+            }
+        }
+        return res;
+    }
+
+    private void minMalwareSpreadHelper_1(int[][] graph, Set<Integer> visited, int removed, int node) {
+        if (visited.contains(node))
+            return;
+        visited.add(node);
+
+        for (int i = 0; i < graph.length; i++) {
+            if (graph[node][i] == 1)
+                minMalwareSpreadHelper_1(graph, visited, removed, i);
+        }
     }
 
     // 925 https://leetcode.com/problems/long-pressed-name/
@@ -353,26 +461,224 @@ public class Solution_19 {
     // 926 https://leetcode.com/problems/flip-string-to-monotone-increasing/
     public int minFlipsMonoIncr(String S) {
         int n = S.length();
-        int one = 0;
-        int zero = 0;
-
-        for (int i = 0; i < S.length(); i++) {
-            if (S.charAt(i) == '0')
-                zero++;
-            else
-                one++;
-        }
-
-        int res = zero;
         int leftOne = 0;
-        int rightZero = zero;
-        for (int i = 0; i < S.length(); i++) {
+        int rightZero = 0;
+        int res = 0;
+
+        for (int i = 0; i < n; i++) {
+            if (S.charAt(i) == '0')
+                rightZero++;
+        }
+        res = rightZero;
+        for (int i = 0; i < n; i++) {
             if (S.charAt(i) == '0') {
                 rightZero -= 1;
             } else {
                 leftOne += 1;
             }
             res = Math.min(res, rightZero + leftOne);
+        }
+        return res;
+    }
+
+    // 927 https://leetcode.com/problems/three-equal-parts/
+    public int[] threeEqualParts(int[] A) {
+        int total = 0;
+        for (int a : A) {
+            if (a == 1)
+                total += 1;
+        }
+
+        if (total % 3 != 0)
+            return new int[] { -1, -1 };
+
+        int expect = total / 3;
+        int i = 0, j = A.length - 1;
+        if (total == 0)
+            return new int[] { 0, A.length - 1 };
+
+        int m = A.length - 1;
+        for (int count = 0; count < expect; m--) {
+            if (A[m] == 1)
+                count += 1;
+        }
+        m += 1;
+
+        while (A[i] == 0)
+            i += 1;
+        for (int k = m; k < A.length; k++, i++) {
+            if (A[i] != A[k])
+                return new int[] { -1, -1 };
+        }
+        i -= 1;
+
+        j = i + 1;
+        while (A[j] == 0)
+            j += 1;
+        for (int k = m; k < A.length; k++, j++) {
+            if (A[j] != A[k])
+                return new int[] { -1, -1 };
+        }
+
+        return new int[] { i, j };
+    }
+
+    // 928 https://leetcode.com/problems/minimize-malware-spread-ii/
+    public int minMalwareSpread_2(int[][] graph, int[] initial) {
+        Map<Integer, Integer> infected = new HashMap<>();
+
+        for (int i = 0; i < initial.length; i++) {
+
+            Set<Integer> visited = new HashSet<>();
+
+            for (int j = 0; j < initial.length; j++) {
+                if (j == i)
+                    continue;
+                minMalwareSpreadHelper_2(graph, visited, initial[i], initial[j]);
+            }
+            infected.put(initial[i], visited.size());
+        }
+
+        int Minitial = Integer.MAX_VALUE;
+        int res = Integer.MAX_VALUE;
+        for (Map.Entry<Integer, Integer> entry : infected.entrySet()) {
+            if (entry.getValue() < Minitial) {
+                Minitial = entry.getValue();
+                res = entry.getKey();
+            } else if (entry.getValue() == Minitial) {
+                res = Math.min(res, entry.getKey());
+            }
+        }
+        return res;
+    }
+
+    private void minMalwareSpreadHelper_2(int[][] graph, Set<Integer> visited, int removed, int node) {
+        if (visited.contains(node))
+            return;
+        visited.add(node);
+
+        for (int i = 0; i < graph.length; i++) {
+            if (i == removed)
+                continue;
+            if (graph[node][i] == 1)
+                minMalwareSpreadHelper_2(graph, visited, removed, i);
+        }
+    }
+
+    // 929 https://leetcode.com/problems/unique-email-addresses/
+    public int numUniqueEmails(String[] emails) {
+        Set<String> uniqueEmail = new HashSet<>();
+
+        for (String email : emails) {
+            String[] names = email.split("@");
+            String localName = names[0].substring(0, names[0].indexOf('+')).replaceAll("\\.", "");
+            uniqueEmail.add(localName + names[1]);
+        }
+
+        return uniqueEmail.size();
+    }
+
+    // 930 https://leetcode.com/problems/binary-subarrays-with-sum/
+    public int numSubarraysWithSum(int[] A, int S) {
+        if (A.length == 0)
+            return 0;
+        int m = 0, n = 1;
+        int res = 0;
+        int curSum = A[0];
+
+        while (m < A.length && n <= A.length) {
+            if (curSum < S) {
+                if (n >= A.length)
+                    break;
+                while (n < A.length && curSum < S) {
+                    curSum += A[n];
+                    n++;
+                }
+            } else if (curSum > S) {
+                while (m < A.length && curSum > S) {
+                    curSum -= A[m];
+                    m++;
+                }
+            } else {
+                while (n < A.length && A[n] == 0) {
+                    n++;
+                }
+                if (S == 0) {
+                    int len = n - m;
+                    res += (1 + len) * len / 2;
+                    if (n < A.length) {
+                        m = n;
+                        n += 1;
+                        curSum = A[m];
+                    } else {
+                        return res;
+                    }
+                } else {
+                    int i = m, j = n;
+                    while (A[i] != 1) {
+                        i++;
+                    }
+                    while (A[j - 1] != 1) {
+                        j--;
+                    }
+                    int a = i - m + 1;
+                    int b = n - j + 1;
+                    res += a * b;
+                    m = i + 1;
+                    curSum -= 1;
+                }
+            }
+        }
+        return res;
+    }
+
+    // 931 https://leetcode.com/problems/minimum-falling-path-sum/
+    public int minFallingPathSum(int[][] A) {
+        int n = A.length;
+        int[][] dp = new int[n][n];
+
+        for (int i = 0; i < n; i++) {
+            dp[0][i] = A[0][i];
+        }
+
+        for (int i = 1; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                dp[i][j] = dp[i - 1][j];
+                if (j > 0)
+                    dp[i][j] = Math.min(dp[i][j], dp[i - 1][j - 1]);
+                if (j < n - 1)
+                    dp[i][j] = Math.min(dp[i][j], dp[i - 1][j + 1]);
+                dp[i][j] += A[i][j];
+            }
+        }
+
+        int res = Integer.MAX_VALUE;
+        for (int i : dp[n - 1]) {
+            res = Math.min(res, i);
+        }
+        return res;
+    }
+
+    // 932 https://leetcode.com/problems/beautiful-array/
+    public int[] beautifulArray(int N) {
+        ArrayList<Integer> list = new ArrayList<>();
+        list.add(1);
+        while (list.size() < N) {
+            ArrayList<Integer> tmp = new ArrayList<>();
+            for (int i : list)
+                if (i * 2 - 1 <= N)
+                    tmp.add(i * 2 - 1);
+            for (int i : list)
+                if (i * 2 <= N)
+                    tmp.add(i * 2);
+            list = tmp;
+        }
+
+        int[] res = new int[N];
+        int i = 0;
+        for (int n : list) {
+            res[i] = n;
+            i++;
         }
         return res;
     }

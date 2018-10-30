@@ -1,16 +1,15 @@
 package com.javasolution;
 
 import java.util.*;
-import java.lang.*;
 
 import com.javasolution.util.*;
 
 public class MainClass {
     public static void main(String[] args) {
         // int num = 231;
-        // int[] nums = { 48, 87, 27 };
-        int[][] twodArr = { { 47, 220 }, { 65, 1 }, { 98, 113 }, { 126, 196 }, { 186, 218 }, { 320, 205 }, { 686, 317 },
-                { 707, 325 }, { 754, 104 }, { 781, 105 } };
+        int[] nums = { 1, 0, 1, 0, 1 };
+        // int[][] twodArr = { { 47, 220 }, { 65, 1 }, { 98, 113 }, { 126, 196 }, { 186, 218 }, { 320, 205 }, { 686, 317 },
+        //         { 707, 325 }, { 754, 104 }, { 781, 105 } };
         // String s = "AAAAACCCCCAAAAACCCCCCAAAAAGGGTTT";
         // List<String> strList = Arrays.asList("hot","dot","dog","lot","log","cog");
         // char[][] grid =
@@ -18,10 +17,12 @@ public class MainClass {
         // TreeNode root = stringToTreeNode("[5,3,6,2,4,null,null,1]");
         // var nums1 = new int[] {1,3};
         // var nums2 = new int[] {2};
-        // String[] strArr = { "@...a" , ".###A", "b.BCc" };
+        // String[] strArr = {
+        // "test.email+alex@leetcode.com","test.e.mail+bob.cathy@leetcode.com","testemail+david@lee.tcode.com"
+        // };
 
         Solution_19 solution = new Solution_19();
-        var res = solution.minFlipsMonoIncr("10011111110010111011");
+        var res = solution.numSubarraysWithSum(nums, 2);
         System.out.println(res);
     }
 

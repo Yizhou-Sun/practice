@@ -1,10 +1,8 @@
 package com.javasolution;
 
 import java.util.*;
-import java.lang.*;
 
 import com.javasolution.util.*;
-import com.javasolution.structdesign.*;
 
 public class Solution_18 {
     // 857 https://leetcode.com/problems/minimum-cost-to-hire-k-workers/description/
@@ -327,11 +325,11 @@ public class Solution_18 {
 
         if (root.left == null && root.right == null) {
             if (q.size() == depth) {
-                paths.add(new ArrayDeque(q));
+                paths.add(new ArrayDeque<>(q));
             } else if (q.size() > depth) {
                 depth = q.size();
                 paths = new LinkedList<>();
-                paths.add(new ArrayDeque(q));
+                paths.add(new ArrayDeque<>(q));
             }
         }
         if (root.left != null) {
