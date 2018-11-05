@@ -682,4 +682,89 @@ public class Solution_19 {
         }
         return res;
     }
+
+    // 933 https://leetcode.com/problems/number-of-recent-calls/
+    // javasolution.structdesign
+
+    // 934 https://leetcode.com/problems/shortest-bridge/
+    public int shortestBridge(int[][] A) {
+        int n = A.length;
+        boolean[][] visited = new boolean[n][n];
+        int[][] dirs = new int[][] { { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 } };
+        Queue<int[]> q = new LinkedList<>();
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (A[i][j] == 1) {
+                    findStart(A, visited, q, i, j, dirs);
+                    break;
+                }
+            }
+            if (!q.isEmpty()) {
+                break;
+            }
+        }
+
+        int res = 0;
+        while (!q.isEmpty()) {
+            int size = q.size();
+            while (size-- > 0) {
+                int[] cur = q.poll();
+                for (int[] dir : dirs) {
+                    int i = cur[0] + dir[0];
+                    int j = cur[1] + dir[1];
+                    if (i >= 0 && j >= 0 && i < n && j < n && !visited[i][j]) {
+                        if (A[i][j] == 1) {
+                            return res;
+                        }
+                        q.offer(new int[] { i, j });
+                        visited[i][j] = true;
+                    }
+                }
+            }
+            res++;
+        }
+        return -1;
+    }
+
+    private void findStart(int[][] A, boolean[][] visited, Queue<int[]> q, int i, int j, int[][] dirs) {
+        if (i < 0 || j < 0 || i >= A.length || j >= A[0].length || visited[i][j] || A[i][j] == 0) {
+            return;
+        }
+        visited[i][j] = true;
+        q.offer(new int[] { i, j });
+        for (int[] dir : dirs) {
+            findStart(A, visited, q, i + dir[0], j + dir[1], dirs);
+        }
+    }
+
+    // 935 https://leetcode.com/problems/knight-dialer/
+    public int knightDialer(int N) {
+        int mod = (int) 1e9 + 7;
+        int[][] dp = new int[N + 1][10];
+        int[][] graph = new int[][] { { 4, 6 }, { 6, 8 }, { 7, 9 }, { 4, 8 }, { 3, 9, 0 }, {}, { 1, 7, 0 }, { 2, 6 },
+                { 1, 3 }, { 2, 4 } };
+
+        for (int i = 0; i < 10; i++) {
+            dp[1][i] = 1;
+        }
+        for (int n = 2; n <= N; n++) {
+            for (int i = 0; i < 10; i++) {
+                for (int nextN : graph[i]) {
+                    dp[n][i] = (dp[n][i] + dp[n - 1][nextN]) % mod;
+                }
+            }
+        }
+
+        int res = 0;
+        for (int i = 0; i < 10; i++) {
+            res = (res + dp[N][i]) % mod;
+        }
+        return res;
+    }
+
+    // https://leetcode.com/problems/stamping-the-sequence/
+    public int[] movesToStamp(String stamp, String target) {
+        return null;
+    }
 }

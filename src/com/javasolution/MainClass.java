@@ -8,8 +8,7 @@ public class MainClass {
     public static void main(String[] args) {
         // int num = 231;
         int[] nums = { 1, 0, 1, 0, 1 };
-        // int[][] twodArr = { { 47, 220 }, { 65, 1 }, { 98, 113 }, { 126, 196 }, { 186, 218 }, { 320, 205 }, { 686, 317 },
-        //         { 707, 325 }, { 754, 104 }, { 781, 105 } };
+        int[][] twodArr = { { 0, 1 }, { 1, 0 }};
         // String s = "AAAAACCCCCAAAAACCCCCCAAAAAGGGTTT";
         // List<String> strList = Arrays.asList("hot","dot","dog","lot","log","cog");
         // char[][] grid =
@@ -22,7 +21,7 @@ public class MainClass {
         // };
 
         Solution_19 solution = new Solution_19();
-        var res = solution.numSubarraysWithSum(nums, 2);
+        var res = solution.shortestBridge(twodArr);
         System.out.println(res);
     }
 
