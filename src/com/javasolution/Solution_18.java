@@ -132,26 +132,33 @@ public class Solution_18 {
     // https://leetcode.com/problems/shortest-subarray-with-sum-at-least-k/description/
     // TODO: Emmmmmm......
     public int shortestSubarray(int[] A, int K) {
-        int n = A.length, res = n + 1;
-        int[] prefixSum = new int[n + 1];
-        Deque<Integer> d = new ArrayDeque<>();
+        int res = Integer.MAX_VALUE;
+        if (A.length == 1) {
+            return A[0] >= K ? 1 : -1;
+        }
+        for (int i = 0; i < A.length; i++) {
+            int sum = 0;
+            int j;
+            for (j = i; j < A.length; j++) {
+                sum += A[j];
+                if (sum < 0) {
+                    i = j;
+                    break;
+                }
+                if (sum >= K) {
+                    res = Math.min(res, j - i + 1);
+                    while (i < j) {
+                        if (sum >= K)
+                            res = Math.min(res, j - i + 1);
+                        sum -= A[i];
+                        i = i + 1;
+                    }
 
-        for (int i = 0; i < n; i++) {
-            prefixSum[i + 1] = prefixSum[i] + A[i];
-        }
-        for (int i = 0; i <= n; i++) {
-            while (d.size() > 0 && prefixSum[i] - prefixSum[d.getFirst()] >= K) {
-                res = Math.min(res, i - d.pollFirst());
+                }
             }
-            while (d.size() > 0 && prefixSum[i] <= prefixSum[d.getLast()]) {
-                d.pollLast();
-            }
-            d.addLast(i);
+
         }
-        if (res <= n) {
-            return res;
-        }
-        return -1;
+        return res == Integer.MAX_VALUE ? -1 : res;
     }
 
     // 863

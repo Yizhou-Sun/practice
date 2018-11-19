@@ -763,8 +763,96 @@ public class Solution_19 {
         return res;
     }
 
-    // https://leetcode.com/problems/stamping-the-sequence/
+    // 936 https://leetcode.com/problems/stamping-the-sequence/
     public int[] movesToStamp(String stamp, String target) {
-        return null;
+        char[] tArr = target.toCharArray();
+        char[] sArr = stamp.toCharArray();
+
+        Stack<Integer> st = new Stack<>();
+        int cnt = 0, total = 10 * tArr.length;
+        boolean change = false;
+
+        while (cnt < total) {
+            change = false;
+            for (int i = 0; i + sArr.length <= tArr.length; i++) {
+                if (validate(tArr, sArr, i)) {
+                    Arrays.fill(tArr, i, i + sArr.length, '*');
+                    st.push(i);
+                    change = true;
+                }
+            }
+            if (!change)
+                break;
+            cnt++;
+        }
+
+        for (char c : tArr) {
+            if (c != '*')
+                return new int[] {};
+        }
+
+        int[] res = new int[st.size()];
+
+        for (int i = 0; i < res.length; i++) {
+            res[i] = st.pop();
+        }
+        return res;
+    }
+
+    private boolean validate(char[] tArr, char[] sArr, int i) {
+        boolean flag = false;
+        for (int j = 0; j < sArr.length; i++, j++) {
+            if (tArr[i] == '*')
+                continue;
+            if (tArr[i] != sArr[j])
+                return false;
+            flag = true;
+        }
+        return flag;
+    }
+
+    // 937 https://leetcode.com/problems/reorder-log-files/
+    public String[] reorderLogFiles(String[] logs) {
+        String[] res = new String[logs.length];
+
+        PriorityQueue<String> letterLog = new PriorityQueue<>(new Comparator<String>() {
+            public int compare(String a, String b) {
+                a = a.substring(a.indexOf(" "));
+                b = b.substring(b.indexOf(" "));
+                return a.compareTo(b);
+            }
+        });
+        Queue<String> digitLog = new ArrayDeque<>();
+
+        for (String s : logs) {
+            String[] sArr = s.split(" ");
+            if (Character.isDigit(sArr[1].charAt(0))) {
+                digitLog.offer(s);
+            } else {
+                letterLog.offer(s);
+            }
+        }
+
+        int i = 0;
+        while (!letterLog.isEmpty()) {
+            res[i] = letterLog.poll();
+            i++;
+        }
+        while (!digitLog.isEmpty()) {
+            res[i] = digitLog.poll();
+            i++;
+        }
+        return res;
+    }
+
+    // 938 https://leetcode.com/problems/range-sum-of-bst/
+    public int rangeSumBST(TreeNode root, int L, int R) {
+        if (root == null)
+            return 0;
+        if (root.val < L)
+            return rangeSumBST(root.right, L, R);
+        if (root.val > R)
+            return rangeSumBST(root.left, L, R);
+        return root.val + rangeSumBST(root.left, L, R) + rangeSumBST(root.right, L, R);
     }
 }

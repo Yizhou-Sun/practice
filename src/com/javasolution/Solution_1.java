@@ -62,7 +62,6 @@ public class Solution_1 {
     }
 
     // 4 https://leetcode.com/problems/median-of-two-sorted-arrays/description/
-    // TODO: Review this problem
     public double findMedianSortedArrays(int[] nums1, int[] nums2) {
         int m = nums1.length, n = nums2.length;
         return (getKthNum(nums1, 0, nums2, 0, (m + n + 1) / 2) + getKthNum(nums1, 0, nums2, 0, (m + n + 2) / 2)) / 2.0;
@@ -228,7 +227,6 @@ public class Solution_1 {
     }
 
     // 10 https://leetcode.com/problems/regular-expression-matching/description/
-    // TODO: String matching! Dynamic programing
     public boolean isMatch(String s, String p) {
         int m = s.length();
         int n = p.length();
@@ -338,7 +336,6 @@ public class Solution_1 {
     }
 
     // 15 https://leetcode.com/problems/3sum/description/
-    // TODO: how to eliminate duplication!
     public List<List<Integer>> threeSum(int[] nums) {
         List<List<Integer>> res = new LinkedList<>();
         Arrays.sort(nums);
@@ -786,7 +783,6 @@ public class Solution_1 {
     }
 
     // 31 https://leetcode.com/problems/next-permutation/description/
-    // TODO: ......
     public void nextPermutation(int[] nums) {
         int i = nums.length - 1;
         while (i > 0 && nums[i] <= nums[i - 1]) {

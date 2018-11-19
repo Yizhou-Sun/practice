@@ -7,8 +7,8 @@ import com.javasolution.util.*;
 public class MainClass {
     public static void main(String[] args) {
         // int num = 231;
-        int[] nums = { 1, 0, 1, 0, 1 };
-        int[][] twodArr = { { 0, 1 }, { 1, 0 }};
+        int[] nums = { 58, -27, -11, 63, 90, 83, 61, -44, -39, 30 };
+        int[][] twodArr = { { 0, 1 }, { 1, 0 } };
         // String s = "AAAAACCCCCAAAAACCCCCCAAAAAGGGTTT";
         // List<String> strList = Arrays.asList("hot","dot","dog","lot","log","cog");
         // char[][] grid =
@@ -20,8 +20,8 @@ public class MainClass {
         // "test.email+alex@leetcode.com","test.e.mail+bob.cathy@leetcode.com","testemail+david@lee.tcode.com"
         // };
 
-        Solution_19 solution = new Solution_19();
-        var res = solution.shortestBridge(twodArr);
+        var solution = new Solution_18();
+        var res = solution.shortestSubarray(nums, 61);
         System.out.println(res);
     }
 
