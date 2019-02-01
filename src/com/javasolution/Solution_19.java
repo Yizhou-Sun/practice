@@ -855,4 +855,247 @@ public class Solution_19 {
             return rangeSumBST(root.left, L, R);
         return root.val + rangeSumBST(root.left, L, R) + rangeSumBST(root.right, L, R);
     }
+
+    // 939 https://leetcode.com/problems/minimum-area-rectangle/
+    public int minAreaRect(int[][] points) {
+        Map<Integer, Set<Integer>> map = new HashMap<>();
+        for (int[] p : points) {
+            if (!map.containsKey(p[0])) {
+                map.put(p[0], new HashSet<>());
+            }
+            map.get(p[0]).add(p[1]);
+        }
+        int min = Integer.MAX_VALUE;
+        for (int[] p1 : points) {
+            for (int[] p2 : points) {
+                if (p1[0] == p2[0] || p1[1] == p2[1]) {
+                    continue;
+                }
+                if (map.get(p1[0]).contains(p2[1]) && map.get(p2[0]).contains(p1[1])) {
+                    min = Math.min(min, Math.abs(p1[0] - p2[0]) * Math.abs(p1[1] - p2[1]));
+                }
+            }
+        }
+        return min == Integer.MAX_VALUE ? 0 : min;
+    }
+
+    // 940 https://leetcode.com/problems/distinct-subsequences-ii/
+    // TODO: learn
+    public int distinctSubseqII(String S) {
+        int MOD = 1_000_000_007;
+        int N = S.length();
+        int[] dp = new int[N + 1];
+        dp[0] = 1;
+
+        int[] last = new int[26];
+        Arrays.fill(last, -1);
+
+        for (int i = 0; i < N; ++i) {
+            int x = S.charAt(i) - 'a';
+            dp[i + 1] = dp[i] * 2 % MOD;
+            if (last[x] >= 0)
+                dp[i + 1] -= dp[last[x]];
+            dp[i + 1] %= MOD;
+            last[x] = i;
+        }
+
+        dp[N]--;
+        if (dp[N] < 0)
+            dp[N] += MOD;
+        return dp[N];
+    }
+
+    // 941 https://leetcode.com/problems/valid-mountain-array/submissions/
+    public boolean validMountainArray(int[] A) {
+        int i = 0;
+        while (i < A.length - 1 && A[i] < A[i + 1]) {
+            i++;
+        }
+        if (i == A.length - 1 || i == 0)
+            return false;
+        while (i < A.length - 1 && A[i] > A[i + 1]) {
+            i++;
+        }
+        return i == A.length - 1;
+    }
+
+    // 942 https://leetcode.com/problems/di-string-match/
+    public int[] diStringMatch(String S) {
+        int[] res = new int[S.length() + 1];
+        int min = 0;
+        int max = 0;
+
+        for (int i = 1; i <= S.length(); i++) {
+            if (S.charAt(i - 1) == 'I') {
+                res[i] = ++max;
+            } else {
+                res[i] = --min;
+            }
+        }
+        for (int i = 0; i <= S.length(); i++) {
+            res[i] -= min;
+        }
+        return res;
+    }
+
+    // 944 https://leetcode.com/problems/delete-columns-to-make-sorted/
+    public int minDeletionSize(String[] A) {
+        int count = 0;
+        int n = A[0].length();
+
+        for (int i = 0; i < n; i++) {
+            char pre = A[0].charAt(i);
+            for (int j = 1; j < A.length; j++) {
+                char cur = A[j].charAt(i);
+                if (cur < pre) {
+                    count++;
+                    break;
+                }
+                pre = cur;
+            }
+        }
+        return count;
+    }
+
+    // 945 https://leetcode.com/problems/minimum-increment-to-make-array-unique/
+    public int minIncrementForUnique(int[] A) {
+        int res = 0;
+        Arrays.sort(A);
+
+        for (int i = 1; i < A.length; i++) {
+            if (A[i] > A[i - 1])
+                continue;
+            res += A[i - 1] - A[i] + 1;
+            A[i] = A[i - 1] + 1;
+        }
+        return res;
+    }
+
+    // 946 https://leetcode.com/problems/validate-stack-sequences/
+    public boolean validateStackSequences(int[] pushed, int[] popped) {
+        if (pushed.length == 0)
+            return true;
+        Stack<Integer> st = new Stack<>();
+        st.push(pushed[0]);
+
+        int i = 1, j = 0;
+        while (i < pushed.length) {
+            while (!st.isEmpty() && j < popped.length && st.peek() == popped[j]) {
+                st.pop();
+                j++;
+            }
+            st.push(pushed[i]);
+            i++;
+        }
+
+        while (!st.isEmpty() && j < popped.length && st.peek() == popped[j]) {
+            st.pop();
+            j++;
+        }
+        return st.isEmpty();
+    }
+
+    // 947
+    // https://leetcode.com/problems/most-stones-removed-with-same-row-or-column/
+    // public int removeStones(int[][] stones) {
+
+    // }
+
+    // 948 https://leetcode.com/problems/bag-of-tokens/
+    public int bagOfTokensScore(int[] tokens, int P) {
+        int points = 0;
+        int res = 0;
+        Arrays.sort(tokens);
+
+        int i = 0, j = tokens.length;
+
+        while (i < j) {
+            if (P >= tokens[i]) {
+                P -= tokens[i];
+                i++;
+                points++;
+                res = Math.max(res, points);
+            } else if (points > 0) {
+                P += tokens[j - 1];
+                j--;
+                points--;
+            } else {
+                i++;
+            }
+        }
+        return res;
+    }
+
+    // 949 https://leetcode.com/problems/largest-time-for-given-digits/
+    public String largestTimeFromDigits(int[] A) {
+        int[] nums = new int[10];
+        for (int i : A) {
+            nums[i]++;
+        }
+        for (int i = 1439; i >= 0; i--) {
+            int hour = i / 60;
+            int minute = i % 60;
+            int n1 = hour / 10;
+            int n2 = hour % 10;
+            int n3 = minute / 10;
+            int n4 = minute % 10;
+
+            nums[n1]--;
+            nums[n2]--;
+            nums[n3]--;
+            nums[n4]--;
+            if (nums[n1] == 0 && nums[n2] == 0 && nums[n3] == 0 && nums[n4] == 0) {
+                StringBuilder sb = new StringBuilder();
+                if (hour < 10)
+                    sb.append(0);
+                sb.append(hour);
+                sb.append(":");
+                if (minute < 10)
+                    sb.append(0);
+                sb.append(minute);
+                return sb.toString();
+            }
+            nums[n1]++;
+            nums[n2]++;
+            nums[n3]++;
+            nums[n4]++;
+        }
+
+        return "";
+    }
+
+    // 950 https://leetcode.com/problems/reveal-cards-in-increasing-order/
+    public int[] deckRevealedIncreasing(int[] deck) {
+        int n = deck.length;
+        Queue<Integer> pick = new ArrayDeque<>();
+
+        for (int i = 0, p = 0; i < n; i++, p += 2) {
+            int index = p;
+            while (index >= n) {
+                index = 1 + 2 * (index - n);
+            }
+            pick.offer(index);
+        }
+
+        int[] res = new int[n];
+        Arrays.sort(deck);
+        for (int d : deck) {
+            res[pick.poll()] = d;
+        }
+        return res;
+    }
+
+    // 951 https://leetcode.com/problems/flip-equivalent-binary-trees/
+    public boolean flipEquiv(TreeNode root1, TreeNode root2) {
+        if (root1 == null && root2 == null)
+            return true;
+        if (root1 == null || root2 == null)
+            return false;
+
+        if (root1.val != root2.val)
+            return false;
+
+        return (flipEquiv(root1.right, root2.left) && flipEquiv(root1.left, root2.right))
+                || (flipEquiv(root1.left, root2.left) && flipEquiv(root1.right, root2.right));
+    }
 }
