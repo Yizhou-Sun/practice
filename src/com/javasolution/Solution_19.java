@@ -997,9 +997,57 @@ public class Solution_19 {
 
     // 947
     // https://leetcode.com/problems/most-stones-removed-with-same-row-or-column/
-    // public int removeStones(int[][] stones) {
+    public int removeStones(int[][] stones) {
+        int total = stones.length;
+        Map<Integer, Set<Integer>> rIndex = new HashMap<>();
+        Map<Integer, Set<Integer>> cIndex = new HashMap<>();
+        for (int[] p : stones) {
+            int r = p[0], c = p[1];
+            if (!rIndex.containsKey(r))
+                rIndex.put(r, new HashSet<>());
+            if (!cIndex.containsKey(c))
+                cIndex.put(c, new HashSet<>());
+            rIndex.get(r).add(c);
+            cIndex.get(c).add(r);
+        }
 
-    // }
+        int count = 0;
+        Set<String> visited = new HashSet<>();
+
+        for (int[] p : stones) {
+            int r = p[0], c = p[1];
+            String pos = r + " " + c;
+            if (!visited.contains(pos)) {
+                visited.add(pos);
+                count++;
+                removeStonesHelper(r, c, rIndex, cIndex, visited);
+            }
+        }
+
+        return total - count;
+    }
+
+    private void removeStonesHelper(int r, int c, Map<Integer, Set<Integer>> rIndex, Map<Integer, Set<Integer>> cIndex,
+            Set<String> visited) {
+        Set<Integer> rSet = rIndex.get(r);
+        Set<Integer> cSet = cIndex.get(c);
+
+        for (int y : rSet) {
+            String pos = r + " " + y;
+            if (!visited.contains(pos)) {
+                visited.add(pos);
+                removeStonesHelper(r, y, rIndex, cIndex, visited);
+            }
+        }
+        for (int x : cSet) {
+            String pos = x + " " + c;
+            if (!visited.contains(pos)) {
+                visited.add(pos);
+                removeStonesHelper(x, c, rIndex, cIndex, visited);
+            }
+        }
+
+    }
 
     // 948 https://leetcode.com/problems/bag-of-tokens/
     public int bagOfTokensScore(int[] tokens, int P) {
@@ -1097,5 +1145,10 @@ public class Solution_19 {
 
         return (flipEquiv(root1.right, root2.left) && flipEquiv(root1.left, root2.right))
                 || (flipEquiv(root1.left, root2.left) && flipEquiv(root1.right, root2.right));
+    }
+
+    // 952 https://leetcode.com/problems/largest-component-size-by-common-factor/
+    public int largestComponentSize(int[] A) {
+        return 1;
     }
 }
