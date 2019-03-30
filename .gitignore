@@ -2,5 +2,6 @@
 .idea/
 .vscode/
 out/
+__pycache__/
 practice.iml
 blackboard
