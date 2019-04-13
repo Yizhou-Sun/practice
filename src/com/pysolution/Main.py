@@ -6,7 +6,8 @@ def main():
     sol = Solution.Solution()
     nums = [2, 7, 11, 15]
     target = 18
-    res = sol.twoSum(nums, target)
+    string = "PAYPALISHIRING"
+    res = sol.isMatch("", "c*")
     print(res)
 
 
