@@ -192,60 +192,122 @@ class Solution:
         m, n = len(s), len(p)
         dp = [[False] * (n + 1) for _ in range(m + 1)]
 
-        dp[0][0] = True
-        for i in range(1, m + 1):
-            for j in range(1, n + 1):
-                c1 = s[i - 1]
-                c2 = p[j - 1]
-                if c2 == "." or c1 == c2:
+        for i in range(0, m + 1):
+            for j in range(0, n + 1):
+                if i == 0 and j == 0:
+                    dp[i][j] = True
+                    continue
+                schar = "" if i == 0 else s[i - 1]
+                pchar = "" if j == 0 else p[j - 1]
+                if (pchar == "." and i != 0) or pchar == schar:
                     dp[i][j] = dp[i - 1][j - 1]
-                elif c2 == "*":
-                    c3 = p[j - 2]
-                    dp[i][j] = (dp[i - 1][j - 1] or dp[i - 1][j]) and (c3 == "." or c1 == c3)
+                elif pchar == "*":
+                    pre = p[j - 2]
+                    dp[i][j] = dp[i][j - 2] or (
+                        (pre == "." or pre == schar) and
+                        (dp[i - 1][j] or dp[i - 1][j - 1]))
 
         return dp[m][n]
 
-    # Given an input string (s) and a pattern (p), implement regular expression matching with support for '.' and '*'.
+    # 11 https://leetcode.com/problems/container-with-most-water/
+    def maxArea(self, height: List[int]) -> int:
+        res = 0
+        i, j = 0, len(height) - 1
 
-    # '.' Matches any single character.
-    # '*' Matches zero or more of the preceding element.
-    # The matching should cover the entire input string (not partial).
+        while i < j:
+            res = max(res, min(height[i], height[j]) * (j - i))
+            if (height[i] < height[j]):
+                i += 1
+            else:
+                j -= 1
+        return res
 
-    # Note:
+    # 12 https://leetcode.com/problems/integer-to-roman/
+    def intToRoman(self, num: int) -> str:
+        int2Roman = {
+            1000: "M",
+            900: "CM",
+            500: "D",
+            400: "CD",
+            100: "C",
+            90: "XC",
+            50: "L",
+            40: "XL",
+            10: "X",
+            9: "IX",
+            5: "V",
+            4: "IV",
+            1: "I"
+        }
+        res = ""
+        for key, value in int2Roman.items():
+            for _ in range(int(num / key)):
+                res += value
+            num %= key
+        return res
 
-    # s could be empty and contains only lowercase letters a-z.
-    # p could be empty and contains only lowercase letters a-z, and characters like . or *.
-    # Example 1:
+    # 13 https://leetcode.com/problems/roman-to-integer/
+    def romanToInt(self, s: str) -> int:
+        roman2Int = {
+            "M": 1000,
+            "D": 500,
+            "C": 100,
+            "L": 50,
+            "X": 10,
+            "V": 5,
+            "I": 1
+        }
+        res = 0
 
-    # Input:
-    # s = "aa"
-    # p = "a"
-    # Output: false
-    # Explanation: "a" does not match the entire string "aa".
-    # Example 2:
+        for i in range(len(s) - 1):
+            if roman2Int[s[i]] < roman2Int[s[i + 1]]:
+                res -= roman2Int[s[i]]
+            else:
+                res += roman2Int[s[i]]
+        res += roman2Int[s[len(s) - 1]]
 
-    # Input:
-    # s = "aa"
-    # p = "a*"
-    # Output: true
-    # Explanation: '*' means zero or more of the precedeng element, 'a'. Therefore, by repeating 'a' once, it becomes "aa".
-    # Example 3:
+        return res
 
-    # Input:
-    # s = "ab"
-    # p = ".*"
-    # Output: true
-    # Explanation: ".*" means "zero or more (*) of any character (.)".
-    # Example 4:
+    # 14 https://leetcode.com/problems/longest-common-prefix/
+    def longestCommonPrefix(self, strs: List[str]) -> str:
+        res = ""
+        if len(strs) == 0: return res
 
-    # Input:
-    # s = "aab"
-    # p = "c*a*b"
-    # Output: true
-    # Explanation: c can be repeated 0 times, a can be repeated 1 time. Therefore it matches "aab".
-    # Example 5:
+        n = len(strs[0])
+        for i in range(n):
+            c = strs[0][i]
+            for s in strs:
+                if i >= len(s) or c != s[i]:
+                    return res
+            res += c
 
-    # Input:
-    # s = "mississippi"
-    # p = "mis*is*p*."
-    # Output: false
+        return res
+
+    # 15 https://leetcode.com/problems/3sum/
+    def threeSum(self, nums: List[int]) -> List[List[int]]:
+        nums.sort()
+        n = len(nums) - 2
+        res = []
+
+        for i in range(n):
+            if i != 0 and nums[i] == nums[i - 1]:
+                continue
+            ans = [nums[i]]
+            self.threeSumBackTrace(nums, res, i + 1, 0, ans)
+
+        return res
+
+    def threeSumBackTrace(self, nums: List[int], res: List[List[int]],
+                          index: int, _sum: int, ans: List[int]) -> None:
+        if len(ans) == 3:
+            if sum(ans) == 0:
+                res.append(list(ans))
+            ans = ans[:-1]
+            return
+
+        for i in range(index, len(nums)):
+            if i != index and nums[i] == nums[i - 1]:
+                continue
+            self.threeSumBackTrace(nums, res, i, _sum, ans)
+
+        ans = ans[:-1]

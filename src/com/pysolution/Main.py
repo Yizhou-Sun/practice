@@ -7,7 +7,7 @@ def main():
     nums = [2, 7, 11, 15]
     target = 18
     string = "PAYPALISHIRING"
-    res = sol.isMatch("", "c*")
+    res = sol.threeSum([-1,0,0,1])
     print(res)
 
 
