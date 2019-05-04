@@ -61,36 +61,36 @@ class Solution:
     # 4 https://leetcode.com/problems/median-of-two-sorted-arrays/
     def findMedianSortedArrays(self, nums1: List[int],
                                nums2: List[int]) -> float:
+        def findNthFromArrays(nums1: List[int], nums2: List[int],
+                              i: int) -> int:
+            if not nums1:
+                return nums2[i]
+            if not nums2:
+                return nums1[i]
+
+            if i == 0:
+                return min(nums1[0], nums2[0])
+
+            mid = int((i - 1) / 2)
+            m1 = m2 = sys.maxsize
+
+            if (mid < len(nums1)):
+                m1 = nums1[mid]
+            if (mid < len(nums2)):
+                m2 = nums2[mid]
+
+            if (m1 < m2):
+                return findNthFromArrays(nums1[mid + 1:], nums2, i - mid - 1)
+            else:
+                return findNthFromArrays(nums1, nums2[mid + 1:], i - mid - 1)
+
         n = len(nums1) + len(nums2)
         if n % 2 != 0:
-            return self.findNthFromArrays(nums1, nums2, int(n / 2))
+            return findNthFromArrays(nums1, nums2, int(n / 2))
         else:
-            m1 = self.findNthFromArrays(nums1, nums2, int(n / 2))
-            m2 = self.findNthFromArrays(nums1, nums2, int(n / 2) - 1)
+            m1 = findNthFromArrays(nums1, nums2, int(n / 2))
+            m2 = findNthFromArrays(nums1, nums2, int(n / 2) - 1)
             return (m1 + m2) / 2
-
-    def findNthFromArrays(self, nums1: List[int], nums2: List[int],
-                          i: int) -> int:
-        if not nums1:
-            return nums2[i]
-        if not nums2:
-            return nums1[i]
-
-        if i == 0:
-            return min(nums1[0], nums2[0])
-
-        mid = int((i - 1) / 2)
-        m1 = m2 = sys.maxsize
-
-        if (mid < len(nums1)):
-            m1 = nums1[mid]
-        if (mid < len(nums2)):
-            m2 = nums2[mid]
-
-        if (m1 < m2):
-            return self.findNthFromArrays(nums1[mid + 1:], nums2, i - mid - 1)
-        else:
-            return self.findNthFromArrays(nums1, nums2[mid + 1:], i - mid - 1)
 
     # 5 https://leetcode.com/problems/longest-palindromic-substring/
     def longestPalindrome(self, s: str) -> str:
@@ -203,9 +203,9 @@ class Solution:
                     dp[i][j] = dp[i - 1][j - 1]
                 elif pchar == "*":
                     pre = p[j - 2]
-                    dp[i][j] = dp[i][j - 2] or (
-                        (pre == "." or pre == schar) and
-                        (dp[i - 1][j] or dp[i - 1][j - 1]))
+                    dp[i][j] = dp[i][j -
+                                     2] or ((pre == "." or pre == schar) and
+                                            (dp[i - 1][j] or dp[i - 1][j - 1]))
 
         return dp[m][n]
 
@@ -285,29 +285,52 @@ class Solution:
 
     # 15 https://leetcode.com/problems/3sum/
     def threeSum(self, nums: List[int]) -> List[List[int]]:
-        nums.sort()
-        n = len(nums) - 2
         res = []
+        nums.sort()
 
-        for i in range(n):
-            if i != 0 and nums[i] == nums[i - 1]:
+        for i, v in enumerate(nums):
+            if i > 0 and v == nums[i - 1]:
                 continue
-            ans = [nums[i]]
-            self.threeSumBackTrace(nums, res, i + 1, 0, ans)
+            if v > 0:
+                break
+            m, n = i + 1, len(nums) - 1
+
+            while m < n:
+                total = nums[m] + nums[n] + v
+                if total > 0:
+                    n -= 1
+                elif total < 0:
+                    m += 1
+                else:
+                    res.append([v, nums[m], nums[n]])
+                    m += 1
+                    n -= 1
+                    while m < len(nums) and nums[m] == nums[m - 1]:
+                        m += 1
+                    while n >= 0 and nums[n] == nums[n + 1]:
+                        n -= 1
+                pass
 
         return res
 
-    def threeSumBackTrace(self, nums: List[int], res: List[List[int]],
-                          index: int, _sum: int, ans: List[int]) -> None:
-        if len(ans) == 3:
-            if sum(ans) == 0:
-                res.append(list(ans))
-            ans = ans[:-1]
-            return
+    # 16 https://leetcode.com/problems/3sum-closest/
+    def threeSumClosest(self, nums: List[int], target: int) -> int:
+        nums.sort()
+        res = nums[0] + nums[1] + nums[2]
 
-        for i in range(index, len(nums)):
-            if i != index and nums[i] == nums[i - 1]:
-                continue
-            self.threeSumBackTrace(nums, res, i, _sum, ans)
+        for i, val in enumerate(nums):
+            m, n = i + 1, len(nums) - 1
+            while m < n:
+                total = val + nums[m] + nums[n]
+                diff = total - target
+                if abs(diff) < abs(res - target):
+                    res = total
 
-        ans = ans[:-1]
+                if diff < 0:
+                    m += 1
+                elif diff > 0:
+                    n -= 1
+                else:
+                    return res
+
+        return res
