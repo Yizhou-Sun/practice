@@ -157,7 +157,8 @@ class Solution:
         maxInt = 2**31 - 1
         minInt = -2**31
         s = s.strip()
-        if len(s) == 0: return 0
+        if len(s) == 0:
+            return 0
 
         i = res = 0
         sign = 1
@@ -176,7 +177,8 @@ class Solution:
 
     # 9 https://leetcode.com/problems/palindrome-number/
     def isPalindrome(self, x: int) -> bool:
-        if x < 0: return False
+        if x < 0:
+            return False
         s = str(x)
 
         i, j = 0, len(s) - 1
@@ -271,7 +273,8 @@ class Solution:
     # 14 https://leetcode.com/problems/longest-common-prefix/
     def longestCommonPrefix(self, strs: List[str]) -> str:
         res = ""
-        if len(strs) == 0: return res
+        if len(strs) == 0:
+            return res
 
         n = len(strs[0])
         for i in range(n):
@@ -334,3 +337,246 @@ class Solution:
                     return res
 
         return res
+
+    # 17 https://leetcode.com/problems/letter-combinations-of-a-phone-number/
+    def letterCombinations(self, digits: str) -> List[str]:
+        if digits == "":
+            return []
+        num2letter = ["", "", "abc", "def", "ghi",
+                      "jkl", "mno", "pqrs", "tuv", "wxyz"]
+        res = [""]
+
+        for i in digits:
+            tmp = []
+            for c in num2letter[int(i)]:
+                for s in res:
+                    tmp.append(s + c)
+            res = tmp
+
+        return res
+
+    # 18 https://leetcode.com/problems/4sum/
+    def fourSum(self, nums: List[int], target: int) -> List[List[int]]:
+        nums.sort()
+        res = []
+        self.__NthSumHelper(nums, 0, target, 4, res, [])
+        return res
+
+    def __NthSumHelper(self, nums: List[int], start: int, target: int, N: int, res: List[List[int]], lt: List[int]) -> None:
+        L = len(nums)
+        if start == L or N * nums[start] > target:
+            return
+
+        if N == 2:
+            i, j = start, L - 1
+            while i < j:
+                total = nums[i] + nums[j]
+                if total == target:
+                    res.append(lt + [nums[i], nums[j]])
+                    i += 1
+                    j -= 1
+                    while i < j and nums[i] == nums[i - 1]:
+                        i += 1
+                    while i < j and nums[j] == nums[j + 1]:
+                        j -= 1
+                elif total < target:
+                    i += 1
+                else:
+                    j -= 1
+        else:
+            for i in range(start, L):
+                if i == start or nums[i] != nums[i - 1]:
+                    self.__NthSumHelper(
+                        nums, i + 1, target - nums[i], N - 1, res, lt + [nums[i]])
+
+    # 19 https://leetcode.com/problems/remove-nth-node-from-end-of-list/
+    def removeNthFromEnd(self, head: ListNode, n: int) -> ListNode:
+        dummyHead = ListNode(-1)
+        dummyHead.next = head
+
+        first = dummyHead
+        for _ in range(n):
+            first = first.next
+        delete = head
+        pre = dummyHead
+
+        while first.next:
+            first = first.next
+            delete = delete.next
+            pre = pre.next
+        pre.next = delete.next
+
+        return dummyHead.next
+
+    # 20 https://leetcode.com/problems/valid-parentheses/
+    def isValid(self, s: str) -> bool:
+        stack = []
+
+        for c in s:
+            if not stack:
+                stack.append(c)
+            elif c == '(' or c == '{' or c == "[":
+                stack.append(c)
+            elif c == ')' and stack.pop() != '(':
+                return False
+            elif c == '}' and stack.pop() != "{":
+                return False
+            elif c == ']' and stack.pop() != '[':
+                return False
+
+        return not stack
+
+    # 21 https://leetcode.com/problems/merge-two-sorted-lists/
+    def mergeTwoLists(self, l1: ListNode, l2: ListNode) -> ListNode:
+        cur = dummyHead = ListNode(-1)
+
+        while l1 and l2:
+            if l1.val >= l2.val:
+                cur.next = l2
+                l2 = l2.next
+            else:
+                cur.next = l1
+                l1 = l1.next
+            cur = cur.next
+
+        if l1:
+            cur.next = l1
+        else:
+            cur.next = l2
+
+        return dummyHead.next
+
+    # 22 https://leetcode.com/problems/generate-parentheses/
+    def generateParenthesis(self, n: int) -> List[str]:
+        res = []
+        self.__generateParenthesisHelper(res, "", n, 0)
+        return res
+
+    def __generateParenthesisHelper(self, res: List[str], s: str, i: int, unmatch: int) -> None:
+        if i == 0 and unmatch == 0:
+            res.append(s)
+            return
+
+        if i != 0:
+            self.__generateParenthesisHelper(res, s + '(', i - 1, unmatch + 1)
+        if unmatch != 0:
+            self.__generateParenthesisHelper(res, s + ')', i, unmatch - 1)
+
+    # 23 https://leetcode.com/problems/merge-k-sorted-lists/
+    def mergeKLists(self, lists: List[ListNode]) -> ListNode:
+        L = len(lists)
+        if (L == 1):
+            return lists[0]
+        if (L == 0):
+            return None
+
+        mid = L // 2
+        left = self.mergeKLists(lists[:mid])
+        right = self.mergeKLists(lists[mid:])
+
+        return self.__mergeKListsHelper(left, right)
+
+    def __mergeKListsHelper(self, l: ListNode, r: ListNode) -> ListNode:
+        dummy = cur = ListNode(0)
+        while l and r:
+            if l.val < r.val:
+                cur.next = l
+                l = l.next
+            else:
+                cur.next = r
+                r = r.next
+            cur = cur.next
+        cur.next = l or r
+
+        return dummy.next
+
+    # 24 https://leetcode.com/problems/swap-nodes-in-pairs/
+    def swapPairs(self, head: ListNode) -> ListNode:
+        k = 2
+        cur = dummy = ListNode(0)
+
+        while head:
+            i = k
+            count = head
+            while count and i > 0:
+                i -= 1
+                count = count.next
+            if i != 0:
+                cur.next = head
+                break
+
+            pre, tail = None, head
+            i = k
+            while head and i > 0:
+                i -= 1
+                temp = head.next
+                head.next = pre
+                pre = head
+                head = temp
+            cur.next = pre
+            cur = tail
+
+        return dummy.next
+
+    # 25 https://leetcode.com/problems/reverse-nodes-in-k-group/
+    def reverseKGroup(self, head: ListNode, k: int) -> ListNode:
+        cur = dummy = ListNode(0)
+
+        while head:
+            i = k
+            count = head
+            while count and i > 0:
+                i -= 1
+                count = count.next
+            if i != 0:
+                cur.next = head
+                break
+
+            pre, tail = None, head
+            i = k
+            while head and i > 0:
+                i -= 1
+                temp = head.next
+                head.next = pre
+                pre = head
+                head = temp
+            cur.next = pre
+            cur = tail
+
+        return dummy.next
+
+    # 26 https://leetcode.com/problems/remove-duplicates-from-sorted-array/
+    def removeDuplicates(self, nums: List[int]) -> int:
+        count = 0
+
+        cur, pre = -1, 0
+        for i, val in enumerate(nums):
+            if i == 0:
+                cur, pre = 1, val
+                count = 1
+                continue
+            if val != pre:
+                nums[cur] = val
+                pre = val
+                cur += 1
+                count += 1
+
+        return count
+
+    # 27 https://leetcode.com/problems/remove-element/
+    def removeElement(self, nums: List[int], val: int) -> int:
+        L, i = 0, 0
+
+        while i < len(nums) and nums[i] != val:
+            L += 1
+            i += 1
+        cur = i
+
+        while i < len(nums):
+            if nums[i] != val:
+                nums[cur] = nums[i]
+                cur += 1
+                L += 1
+            i += 1
+
+        return L
