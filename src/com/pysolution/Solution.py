@@ -580,3 +580,26 @@ class Solution:
             i += 1
 
         return L
+
+    # 28 https://leetcode.com/problems/implement-strstr/
+    def strStr(self, haystack: str, needle: str) -> int:
+        if not needle:
+            return 0
+
+        for i, s in enumerate(haystack):
+            m, n = 0, i
+            if i + len(needle) > len(haystack):
+                return -1
+            while m < len(needle) and n < len(haystack):
+                if needle[m] != haystack[n]:
+                    break
+                m += 1
+                n += 1
+            if m == len(needle):
+                return i
+
+        return -1
+
+    # 29 https://leetcode.com/problems/divide-two-integers/
+    def divide(self, dividend: int, divisor: int) -> int:
+        pass
