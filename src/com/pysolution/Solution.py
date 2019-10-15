@@ -74,12 +74,12 @@ class Solution:
             mid = int((i - 1) / 2)
             m1 = m2 = sys.maxsize
 
-            if (mid < len(nums1)):
+            if mid < len(nums1):
                 m1 = nums1[mid]
-            if (mid < len(nums2)):
+            if mid < len(nums2):
                 m2 = nums2[mid]
 
-            if (m1 < m2):
+            if m1 < m2:
                 return findNthFromArrays(nums1[mid + 1:], nums2, i - mid - 1)
             else:
                 return findNthFromArrays(nums1, nums2[mid + 1:], i - mid - 1)
@@ -218,7 +218,7 @@ class Solution:
 
         while i < j:
             res = max(res, min(height[i], height[j]) * (j - i))
-            if (height[i] < height[j]):
+            if height[i] < height[j]:
                 i += 1
             else:
                 j -= 1
@@ -239,7 +239,7 @@ class Solution:
             9: "IX",
             5: "V",
             4: "IV",
-            1: "I"
+            1: "I",
         }
         res = ""
         for key, value in int2Roman.items():
@@ -342,8 +342,9 @@ class Solution:
     def letterCombinations(self, digits: str) -> List[str]:
         if digits == "":
             return []
-        num2letter = ["", "", "abc", "def", "ghi",
-                      "jkl", "mno", "pqrs", "tuv", "wxyz"]
+        num2letter = [
+            "", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"
+        ]
         res = [""]
 
         for i in digits:
@@ -362,7 +363,8 @@ class Solution:
         self.__NthSumHelper(nums, 0, target, 4, res, [])
         return res
 
-    def __NthSumHelper(self, nums: List[int], start: int, target: int, N: int, res: List[List[int]], lt: List[int]) -> None:
+    def __NthSumHelper(self, nums: List[int], start: int, target: int, N: int,
+                       res: List[List[int]], lt: List[int]) -> None:
         L = len(nums)
         if start == L or N * nums[start] > target:
             return
@@ -386,8 +388,8 @@ class Solution:
         else:
             for i in range(start, L):
                 if i == start or nums[i] != nums[i - 1]:
-                    self.__NthSumHelper(
-                        nums, i + 1, target - nums[i], N - 1, res, lt + [nums[i]])
+                    self.__NthSumHelper(nums, i + 1, target - nums[i], N - 1,
+                                        res, lt + [nums[i]])
 
     # 19 https://leetcode.com/problems/remove-nth-node-from-end-of-list/
     def removeNthFromEnd(self, head: ListNode, n: int) -> ListNode:
@@ -452,7 +454,8 @@ class Solution:
         self.__generateParenthesisHelper(res, "", n, 0)
         return res
 
-    def __generateParenthesisHelper(self, res: List[str], s: str, i: int, unmatch: int) -> None:
+    def __generateParenthesisHelper(self, res: List[str], s: str, i: int,
+                                    unmatch: int) -> None:
         if i == 0 and unmatch == 0:
             res.append(s)
             return
@@ -465,9 +468,9 @@ class Solution:
     # 23 https://leetcode.com/problems/merge-k-sorted-lists/
     def mergeKLists(self, lists: List[ListNode]) -> ListNode:
         L = len(lists)
-        if (L == 1):
+        if L == 1:
             return lists[0]
-        if (L == 0):
+        if L == 0:
             return None
 
         mid = L // 2
@@ -586,7 +589,7 @@ class Solution:
         if not needle:
             return 0
 
-        for i, s in enumerate(haystack):
+        for i in range(len(haystack)):
             m, n = 0, i
             if i + len(needle) > len(haystack):
                 return -1
@@ -600,6 +603,71 @@ class Solution:
 
         return -1
 
+    # TODO: Learn
     # 29 https://leetcode.com/problems/divide-two-integers/
     def divide(self, dividend: int, divisor: int) -> int:
-        pass
+        MIN, MAX = -2**31, 2**31 - 1
+
+        res = 0
+        sign = 1 if dividend * divisor >= 0 else -1
+
+        dividend = abs(dividend)
+        divisor = abs(divisor)
+
+        while dividend >= divisor:
+            temp, i = divisor, 1
+            while dividend >= temp:
+                dividend -= temp
+                res += i
+                i <<= 1
+                temp <<= 1
+
+        res *= sign
+
+        return MAX if res > MAX or res < MIN else res
+
+    # 30 https://leetcode.com/problems/substring-with-concatenation-of-all-words/
+    def findSubstring(self, s: str, words: List[str]) -> List[int]:
+        if not words:
+            return []
+        res = []
+        l, N = len(words[0]), len(words)
+        L = N * l
+
+        wordTable = {}
+        for w in words:
+            wordTable[w] = wordTable.get(w, 0) + 1
+
+        i, n = 0, len(s) - L
+        while i <= n:
+            j = i
+            curTable = {}
+
+            while j < i + L:
+                w = s[j:j + l]
+                if w not in wordTable:
+                    break
+                curTable[w] = curTable.get(w, 0) + 1
+                if curTable[w] > wordTable[w]:
+                    break
+                j += l
+            if j == i + L:
+                res.append(i)
+
+            i += 1
+
+        return res
+
+
+def main():
+    sol = Solution()
+    # nums = [2, 7, 11, 15]
+    # target = 18
+    s = "foobarthebarfooman"
+    words = ["foo", "bar"]
+    res = sol.findSubstring(s, words)
+    print(res)
+
+
+if __name__ == "__main__":
+    main()
