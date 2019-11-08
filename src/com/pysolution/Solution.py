@@ -4,7 +4,7 @@ from typing import List
 from Structure import ListNode
 
 
-class Solution:
+class SolutionPage1:
     # 1 https://leetcode.com/problems/two-sum/
     def twoSum(self, nums: List[int], target: int) -> List[int]:
         myDict = {}
@@ -603,7 +603,7 @@ class Solution:
 
         return -1
 
-    # TODO: Learn
+    # TODO: Learn this one
     # 29 https://leetcode.com/problems/divide-two-integers/
     def divide(self, dividend: int, divisor: int) -> int:
         MIN, MAX = -2**31, 2**31 - 1
@@ -658,16 +658,58 @@ class Solution:
 
         return res
 
+    # 31 https://leetcode.com/problems/next-permutation/
+    def nextPermutation(self, nums: List[int]) -> None:
+        """
+        Do not return anything, modify nums in-place instead.
+        """
+        i = len(nums) - 2
+        while i >= 0 and nums[i] >= nums[i + 1]:
+            i -= 1
 
-def main():
-    sol = Solution()
-    # nums = [2, 7, 11, 15]
-    # target = 18
-    s = "foobarthebarfooman"
-    words = ["foo", "bar"]
-    res = sol.findSubstring(s, words)
-    print(res)
+        if i == -1:
+            nums.reverse()
+            return None
+
+        j = len(nums) - 1
+        while j >= 0 and nums[j] <= nums[i]:
+            j -= 1
+        nums[i], nums[j] = nums[j], nums[i]
+
+        i, j = i + 1, len(nums) - 1
+        while i < j:
+            nums[i], nums[j] = nums[j], nums[i]
+            i += 1
+            j -= 1
+
+        return None
+
+    # 32 https://leetcode.com/problems/longest
+    def longestValidParentheses(self, s: str) -> int:
+        res = 0
+        n = len(s)
+        isValid = [[False] * n for _ in range(n)]
+
+        for i in range(1, n):
+            if s[i - 1] == "(" and s[i] == ")":
+                isValid[i - 1][i] = True
+
+        for i in range(n):
+            if s[i] == ")":
+                continue
+            for j in range(i + 1, n):
+                pass
+        print(isValid)
+
+        return res
 
 
 if __name__ == "__main__":
-    main()
+    solution = SolutionPage1()
+    nums = [4, 2, 0, 2, 3, 2, 0]
+    # target = 18
+    s = ")()()"
+    # words = ["foo", "bar"]
+
+    res = solution.longestValidParentheses(s)
+    print(res)
