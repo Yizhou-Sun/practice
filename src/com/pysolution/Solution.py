@@ -684,31 +684,66 @@ class SolutionPage1:
 
         return None
 
-    # 32 https://leetcode.com/problems/longest
+    # 32 https://leetcode.com/problems/longest-valid-parentheses/
     def longestValidParentheses(self, s: str) -> int:
-        res = 0
+        # TLE solution
+        # res = 0
+        # n = len(s)
+        # isValid = [[False] * (n + 1) for _ in range(n + 1)]
+        # for i in range(2, n + 1):
+        #     if s[i - 2] == "(" and s[i - 1] == ")":
+        #         isValid[i - 2][i] = True
+        #         res = 2
+        # for i in range(2, n + 1):
+        #     for j in range(n - i + 1):
+        #         if s[j] == "(" and s[j + i - 1] == ")":
+        #             if i == 2:
+        #                 isValid[j][j + i] = True
+        #             else:
+        #                 isValid[j][j + i] = isValid[j + 1][j + i - 1]
+        #                 for k in range(j, j + i, 2):
+        #                     isValid[j][j + i] = isValid[j][j + i] or (isValid[j][k] and isValid[k][j + i])
+        #             if isValid[j][j + i]:
+        #                 res = max(res, i)
+        # return res
+
+        # stack solution
+        # res = 0
+        # m_stack = [-1]
+
+        # for i, char in enumerate(s):
+        #     if char == "(":
+        #         m_stack.append(i)
+        #     else:
+        #         m_stack.pop()
+        #         if not m_stack:
+        #             m_stack.append(i)
+        #         else:
+        #             res = max(res, i - m_stack[-1])
+        # return res
         n = len(s)
-        isValid = [[False] * n for _ in range(n)]
+        isValid = [0] * n
 
         for i in range(1, n):
-            if s[i - 1] == "(" and s[i] == ")":
-                isValid[i - 1][i] = True
-
-        for i in range(n):
-            if s[i] == ")":
+            if s[i] == "(":
                 continue
-            for j in range(i + 1, n):
+            if isValid[i - 1]:
+                if s[i - isValid[i - 1] - 1] == "(":
+                    isValid[i] = isValid[i - 1] + 2
+            else:
+                if s[i - 1] == "(":
+                    isValid[i] = 2
+                    if i >= 2:
+                        isValid[i] += isValid[i - 2]
                 pass
-        print(isValid)
-
-        return res
+        return max(isValid)
 
 
 if __name__ == "__main__":
     solution = SolutionPage1()
     nums = [4, 2, 0, 2, 3, 2, 0]
     # target = 18
-    s = ")()()"
+    s = "()()"
     # words = ["foo", "bar"]
 
     res = solution.longestValidParentheses(s)
