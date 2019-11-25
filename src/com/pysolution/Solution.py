@@ -1,4 +1,5 @@
 import sys
+import bisect
 
 from typing import List
 from Structure import ListNode
@@ -737,6 +738,47 @@ class SolutionPage1:
                         isValid[i] += isValid[i - 2]
                 pass
         return max(isValid)
+
+    # 33 https://leetcode.com/problems/search-in-rotated-sorted-array/
+    def search(self, nums: List[int], target: int) -> int:
+        if len(nums) == 0:
+            return -1
+        return self.__searchHelper(nums, target, 0, len(nums))
+
+    def __searchHelper(self, nums: List[int], target: int, start: int,
+                       end: int) -> int:
+        if start == end - 1:
+            return start if nums[start] == target else -1
+
+        if target < nums[start] and target > nums[end - 1]:
+            return -1
+
+        mid = (end + start) // 2
+        res = self.__searchHelper(nums, target, start, mid)
+        if res != -1:
+            return res
+        return self.__searchHelper(nums, target, mid, end)
+
+    # 34 https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/
+    def searchRange(self, nums: List[int], target: int) -> List[int]:
+        left = bisect.bisect_left(nums, target + 1)
+        right = bisect.bisect_right(nums, target - 1)
+        return [right, left - 1] if right <= left - 1 else [-1, -1]
+
+    # 35 https://leetcode.com/problems/search-insert-position/
+    def searchInsert(self, nums: List[int], target: int) -> int:
+        low, high = 0, len(nums) - 1
+
+        while low <= high:
+            mid = (high + low) // 2
+            if nums[mid] == target:
+                return mid
+            if nums[mid] < target:
+                low = mid + 1
+            else:
+                high = mid - 1
+
+        return low
 
 
 if __name__ == "__main__":
