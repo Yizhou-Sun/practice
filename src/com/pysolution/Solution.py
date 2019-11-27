@@ -737,12 +737,14 @@ class SolutionPage1:
                     if i >= 2:
                         isValid[i] += isValid[i - 2]
                 pass
+
         return max(isValid)
 
     # 33 https://leetcode.com/problems/search-in-rotated-sorted-array/
     def search(self, nums: List[int], target: int) -> int:
         if len(nums) == 0:
             return -1
+
         return self.__searchHelper(nums, target, 0, len(nums))
 
     def __searchHelper(self, nums: List[int], target: int, start: int,
@@ -757,12 +759,14 @@ class SolutionPage1:
         res = self.__searchHelper(nums, target, start, mid)
         if res != -1:
             return res
+
         return self.__searchHelper(nums, target, mid, end)
 
     # 34 https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/
     def searchRange(self, nums: List[int], target: int) -> List[int]:
         left = bisect.bisect_left(nums, target + 1)
         right = bisect.bisect_right(nums, target - 1)
+
         return [right, left - 1] if right <= left - 1 else [-1, -1]
 
     # 35 https://leetcode.com/problems/search-insert-position/
@@ -780,13 +784,165 @@ class SolutionPage1:
 
         return low
 
+    # 36 https://leetcode.com/problems/valid-sudoku/
+    def isValidSudoku(self, board: List[List[str]]) -> bool:
+        row = {}
+        column = {}
+        box = {}
+        for i in range(9):
+            row[i] = set()
+            column[i] = set()
+            box[i] = set()
+
+        for i in range(9):
+            for j in range(9):
+                c = board[i][j]
+                if c == ".":
+                    continue
+                n = j // 3 + 3 * (i // 3)
+                if c in row[i] or c in column[j] or c in box[n]:
+                    return False
+                row[i].add(c)
+                column[j].add(c)
+                box[n].add(c)
+
+        return True
+
+    # 37 https://leetcode.com/problems/sudoku-solver/
+    def solveSudoku(self, board: List[List[str]]) -> None:
+        """
+        Do not return anything, modify board in-place instead.
+        """
+        row = {}
+        column = {}
+        box = {}
+        for i in range(9):
+            row[i] = set()
+            column[i] = set()
+            box[i] = set()
+
+        for i in range(9):
+            for j in range(9):
+                c = board[i][j]
+                if c == ".":
+                    continue
+
+                row[i].add(c)
+                column[j].add(c)
+                n = j // 3 + 3 * (i // 3)
+                box[n].add(c)
+
+        self.__fillSudoku(board, row, column, box)
+
+    def __fillSudoku(self, board: List[List[str]], row: set, column: set,
+                     box: set) -> bool:
+        for i in range(9):
+            for j in range(9):
+                c = board[i][j]
+                if c != ".":
+                    continue
+
+                row_set = row[i]
+                column_set = column[j]
+                n = j // 3 + 3 * (i // 3)
+                box_set = box[n]
+
+                for k in range(1, 10):
+                    k = str(k)
+                    if k in row_set or k in column_set or k in box_set:
+                        continue
+                    row_set.add(k)
+                    column_set.add(k)
+                    box_set.add(k)
+                    board[i][j] = k
+                    if self.__fillSudoku(board, row, column, box):
+                        return True
+                    row_set.remove(k)
+                    column_set.remove(k)
+                    box_set.remove(k)
+                    board[i][j] = "."
+                return False
+
+        return True
+
+    # 38 https://leetcode.com/problems/count-and-say/
+    def countAndSay(self, n: int) -> str:
+        res = "1"
+
+        for _ in range(1, n):
+            temp = ""
+            count = 1
+            pre = res[0]
+            i = 1
+            while i < len(res):
+                if res[i] == pre:
+                    count += 1
+                else:
+                    temp += str(count) + pre
+                    count = 1
+                    pre = res[i]
+                i += 1
+            temp += str(count) + pre
+            res = temp
+
+        return res
+
+    # 39 https://leetcode.com/problems/combination-sum/
+    def combinationSum(self, candidates: List[int],
+                       target: int) -> List[List[int]]:
+        res = []
+        self.__combinationSumBacktrace(candidates, target, 0, res, [], 0)
+
+        return res
+
+    def __combinationSumBacktrace(self, candidates: List[int], target: int,
+                                  start: int, res: List[List[int]],
+                                  curList: List[int], curSum: int) -> None:
+        if curSum > target:
+            return
+        if curSum == target:
+            res.append(list(curList))
+            return
+
+        for i in range(start, len(candidates)):
+            curList.append(candidates[i])
+            self.__combinationSumBacktrace(candidates, target, i, res, curList,
+                                           curSum + candidates[i])
+            curList.pop()
+
+    # 40 https://leetcode.com/problems/combination-sum-ii/
+    def combinationSum2(self, candidates: List[int],
+                        target: int) -> List[List[int]]:
+        candidates.sort()
+        res = []
+        self.__combinationSum2Backtrace(candidates, target, 0, res, [], 0)
+
+        return res
+
+    def __combinationSum2Backtrace(self, candidates: List[int], target: int,
+                                   start: int, res: List[List[int]],
+                                   curList: List[int], curSum: int) -> None:
+        if curSum > target:
+            return
+        if curSum == target:
+            res.append(list(curList))
+            return
+
+        for i in range(start, len(candidates)):
+            if i > start and candidates[i] == candidates[i - 1]:
+                continue
+            curList.append(candidates[i])
+            self.__combinationSum2Backtrace(candidates, target, i + 1, res,
+                                            curList, curSum + candidates[i])
+            curList.pop()
+
 
 if __name__ == "__main__":
     solution = SolutionPage1()
-    nums = [4, 2, 0, 2, 3, 2, 0]
+    # nums = [4, 2, 0, 2, 3, 2, 0]
     # target = 18
-    s = "()()"
+    # s = "()()"
     # words = ["foo", "bar"]
 
-    res = solution.longestValidParentheses(s)
+    res = solution.countAndSay(5)
     print(res)
