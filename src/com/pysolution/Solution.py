@@ -191,7 +191,7 @@ class SolutionPage1:
         return i >= j
 
     # 10 https://leetcode.com/problems/regular-expression-matching/
-    def isMatch(self, s: str, p: str) -> bool:
+    def isMatch_Regular_Expression_Matching(self, s: str, p: str) -> bool:
         m, n = len(s), len(p)
         dp = [[False] * (n + 1) for _ in range(m + 1)]
 
@@ -936,13 +936,119 @@ class SolutionPage1:
                                             curList, curSum + candidates[i])
             curList.pop()
 
+    # 41 https://leetcode.com/problems/first-missing-positive/
+    def firstMissingPositive(self, nums: List[int]) -> int:
+        length = len(nums)
+        freq = [0] * length
+
+        for i, n in enumerate(nums):
+            if n > 0 and n <= length:
+                freq[n - 1] += 1
+
+        for i, n in enumerate(freq):
+            if n == 0:
+                return i + 1
+
+        return length + 1
+
+    # 42 https://leetcode.com/problems/trapping-rain-water/
+    def trap(self, height: List[int]) -> int:
+        left, right = 0, len(height) - 1
+        res = 0
+        max_left, max_right = 0, 0
+
+        while left < right:
+            if height[left] < height[right]:
+                if height[left] < max_left:
+                    res += max_left - height[left]
+                else:
+                    max_left = height[left]
+                left += 1
+            else:
+                if height[right] < max_right:
+                    res += max_right - height[right]
+                else:
+                    max_right = height[right]
+                right -= 1
+                pass
+
+        return res
+
+    # 43 https://leetcode.com/problems/multiply-strings/
+    def multiply(self, num1: str, num2: str) -> str:
+        if num1 == "0" or num2 == "0":
+            return "0"
+
+        nums = [0] * (len(num1) + len(num2))
+
+        for i in range(len(num1) - 1, -1, -1):
+            for j in range(len(num2) - 1, -1, -1):
+                m_sum = int(num1[i]) * int(num2[j]) + nums[i + j + 1]
+                nums[i + j] += m_sum // 10
+                nums[i + j + 1] = m_sum % 10
+
+        while nums[0] == 0:
+            del nums[0]
+
+        res = ""
+        for n in nums:
+            res = res + str(n)
+        return res
+
+    # 44 https://leetcode.com/problems/wildcard-matching/
+    def isMatch_Wildcard_Matching(self, s: str, p: str) -> bool:
+        m, n = len(s), len(p)
+        dp = [[False] * (n + 1) for _ in range(m + 1)]
+        dp[0][0] = True
+
+        for i in range(m + 1):
+            for j in range(1, n + 1):
+                if i != 0 and (p[j - 1] == "?" or p[j - 1] == s[i - 1]):
+                    dp[i][j] = dp[i - 1][j - 1]
+                elif p[j - 1] == "*":
+                    dp[i][j] = dp[i - 1][j] or dp[i][j - 1]
+
+        return dp[m][n]
+
+    # 45 https://leetcode.com/problems/jump-game-ii/
+    def jump(self, nums: List[int]) -> int:
+        # DP solution Time Limit Exceeded
+        # n = len(nums)
+        # dp = [n] * n
+        # dp[n - 1] = 0
+
+        # for i in range(n - 2, -1, -1):
+        #     k = 0
+        #     while k <= nums[i] and k + i < n:
+        #         dp[i] = min(dp[i], 1 + dp[k + i])
+        #         k += 1
+        # return dp[0]
+
+        if len(nums) == 1:
+            return 0
+
+        steps = 0
+        preRange = 0
+        curRange = 0
+
+        for i, n in enumerate(nums):
+            if i == len(nums) - 1:
+                break
+            if i + n > curRange:
+                curRange = i + n
+            if i == preRange:
+                steps += 1
+                preRange = curRange
+                curRange = 0
+
+        return steps
 
 if __name__ == "__main__":
     solution = SolutionPage1()
-    # nums = [4, 2, 0, 2, 3, 2, 0]
+    nums = [7,0,9,6,9,6,1,7,9,0,1,2,9,0,3]
     # target = 18
     # s = "()()"
     # words = ["foo", "bar"]
 
-    res = solution.countAndSay(5)
+    res = solution.jump(nums)
     print(res)
