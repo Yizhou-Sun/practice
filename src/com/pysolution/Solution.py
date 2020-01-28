@@ -1027,25 +1027,46 @@ class SolutionPage1:
         if len(nums) == 1:
             return 0
 
-        steps = 0
-        preRange = 0
+        res = 0
         curRange = 0
+        preRange = 0
 
-        for i, n in enumerate(nums):
+        for i in range(len(nums)):
             if i == len(nums) - 1:
                 break
-            if i + n > curRange:
-                curRange = i + n
+            if nums[i] + i > curRange:
+                curRange = nums[i] + i
             if i == preRange:
-                steps += 1
                 preRange = curRange
-                curRange = 0
+                res += 1
 
-        return steps
+        return res
+
+    # 46 https://leetcode.com/problems/permutations/
+    def permute(self, nums: List[int]) -> List[List[int]]:
+        res = []
+        self.__premuteHelper(res, [], set(), nums)
+        return res
+
+    def __premuteHelper(self, res: List[List[int]], cur: List[int], used: set,
+                        nums: List[int]) -> None:
+        if len(cur) == len(nums):
+            res.append(list(cur))
+            return
+
+        for i in nums:
+            if i in used:
+                continue
+            used.add(i)
+            cur.append(i)
+            self.__premuteHelper(res, cur, used, nums)
+            used.remove(i)
+            del cur[-1]
+
 
 if __name__ == "__main__":
     solution = SolutionPage1()
-    nums = [7,0,9,6,9,6,1,7,9,0,1,2,9,0,3]
+    nums = [7, 0, 9, 6, 9, 6, 1, 7, 9, 0, 1, 2, 9, 0, 3]
     # target = 18
     # s = "()()"
     # words = ["foo", "bar"]
