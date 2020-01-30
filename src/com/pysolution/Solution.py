@@ -1045,7 +1045,9 @@ class SolutionPage1:
     # 46 https://leetcode.com/problems/permutations/
     def permute(self, nums: List[int]) -> List[List[int]]:
         res = []
+
         self.__premuteHelper(res, [], set(), nums)
+
         return res
 
     def __premuteHelper(self, res: List[List[int]], cur: List[int], used: set,
@@ -1063,13 +1065,87 @@ class SolutionPage1:
             used.remove(i)
             del cur[-1]
 
+    # 47 https://leetcode.com/problems/permutations-ii/
+    def permuteUnique(self, nums: List[int]) -> List[List[int]]:
+        res = []
+        available = {}
+
+        nums.sort()
+        for i in nums:
+            available[i] = available.get(i, 0) + 1
+
+        self.__permuteUniqueHelper(res, [], available, nums)
+        return res
+
+    def __permuteUniqueHelper(self, res: List[List[int]], cur: List[int],
+                              available: dict, nums: List[int]) -> None:
+        if len(cur) == len(nums):
+            res.append(list(cur))
+            return
+
+        pre = None
+        for i in nums:
+            if available[i] == 0 or i == pre:
+                continue
+            available[i] = available[i] - 1
+            cur.append(i)
+            self.__permuteUniqueHelper(res, cur, available, nums)
+            available[i] = available[i] + 1
+            del cur[-1]
+            pre = i
+
+    # 48 https://leetcode.com/problems/rotate-image/
+    def rotate(self, matrix: List[List[int]]) -> None:
+        """
+        Do not return anything, modify matrix in-place instead.
+        """
+        n = len(matrix)
+
+        for i in range(n):
+            for j in range(i):
+                matrix[i][j], matrix[j][i] = matrix[j][i], matrix[i][j]
+
+        for i in range(n):
+            for j in range(n // 2):
+                matrix[i][j], matrix[i][n - j - 1] = matrix[i][n - j -
+                                                               1], matrix[i][j]
+
+    # 49 https://leetcode.com/problems/group-anagrams/
+    def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
+        res = {}
+
+        for s in strs:
+            hash_s = tuple(sorted(s))
+            if hash_s not in res:
+                res[hash_s] = [s]
+            else:
+                res[hash_s].append(s)
+
+        return res.values()
+
+    # 50 https://leetcode.com/problems/powx-n/
+    def myPow(self, x: float, n: int) -> float:
+        sign = True if n >= 0 else False
+        n = abs(n)
+        i, res = 0, 1
+
+        while i < n:
+            cur, val = 1, x
+            while i + cur * 2 < n:
+                cur = cur * 2
+                val = val * val
+            res = res * val
+            i = i + cur
+
+        return res if sign else 1 / res
+
 
 if __name__ == "__main__":
     solution = SolutionPage1()
-    nums = [7, 0, 9, 6, 9, 6, 1, 7, 9, 0, 1, 2, 9, 0, 3]
+    # nums = [7, 0, 9, 6, 9, 6, 1, 7, 9, 0, 1, 2, 9, 0, 3]
     # target = 18
     # s = "()()"
-    # words = ["foo", "bar"]
+    words = ["foo", "bar", "oof"]
 
-    res = solution.jump(nums)
+    res = solution.myPow(2, -3)
     print(res)
