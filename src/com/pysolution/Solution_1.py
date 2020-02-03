@@ -5,7 +5,7 @@ from typing import List
 from Structure import ListNode
 
 
-class SolutionPage1:
+class Solution_1:
     # 1 https://leetcode.com/problems/two-sum/
     def twoSum(self, nums: List[int], target: int) -> List[int]:
         myDict = {}
@@ -1141,11 +1141,11 @@ class SolutionPage1:
 
 
 if __name__ == "__main__":
-    solution = SolutionPage1()
+    solution = Solution_1()
     # nums = [7, 0, 9, 6, 9, 6, 1, 7, 9, 0, 1, 2, 9, 0, 3]
     # target = 18
     # s = "()()"
-    words = ["foo", "bar", "oof"]
+    # words = ["foo", "bar", "oof"]
 
-    res = solution.myPow(2, -3)
+    res = solution.myPow(3, 1)
     print(res)
