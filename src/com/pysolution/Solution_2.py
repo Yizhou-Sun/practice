@@ -94,13 +94,78 @@ class Solution_2:
 
         return res
 
+    # 54 https://leetcode.com/problems/spiral-matrix/
+    def spiralOrder(self, matrix: List[List[int]]) -> List[int]:
+        if len(matrix) == 0:
+            return []
+
+        m, n = len(matrix), len(matrix[0])
+        res = []
+
+        step = 0
+        p, q = 0, 0
+        while step < n:
+            for i in range(q, q + n - step):
+                res.append(matrix[p][i])
+
+            if m - step - 1 <= 0:
+                return res
+            for i in range(p + 1, p + m - step):
+                res.append(matrix[i][q + n - step - 1])
+
+            if n - step - 1 <= 0:
+                return res
+            for i in range(q + n - step - 2, q - 1, -1):
+                res.append(matrix[p + m - step - 1][i])
+
+            if m - step - 2 <= 0:
+                return res
+            for i in range(p + m - step - 2, p, -1):
+                res.append(matrix[i][q])
+
+            p += 1
+            q += 1
+            step += 2
+
+        return res
+
+    # 55 https://leetcode.com/problems/jump-game/
+    def canJump(self, nums: List[int]) -> bool:
+        maxRange = 0
+
+        i, n = 0, len(nums) - 1
+        while i <= maxRange:
+            maxRange = max(maxRange, i + nums[i])
+            if maxRange >= n:
+                return True
+            i += 1
+
+        return maxRange + 1 >= len(nums)
+
+    # 56 https://leetcode.com/problems/merge-intervals/
+    def merge(self, intervals: List[List[int]]) -> List[List[int]]:
+        if len(intervals) == 0:
+            return []
+
+        intervals.sort()
+        res = [intervals[0]]
+
+        for i in range(1, len(intervals)):
+            if intervals[i][0] <= res[-1][1]:
+                res[-1][1] = max(res[-1][1], intervals[i][1])
+            else:
+                res.append(intervals[i])
+
+        return res
+
 
 if __name__ == "__main__":
     solution = Solution_2()
-    # nums = [7, 0, 9, 6, 9, 6, 1, 7, 9, 0, 1, 2, 9, 0, 3]
+    # nums = [0, 1]
+    matrix = [[1, 3], [4, 5]]
     # target = 18
     # s = "()()"
     words = ["foo", "bar", "oof"]
 
-    res = solution.solveNQueens(3)
+    res = solution.merge(matrix)
     print(res)
