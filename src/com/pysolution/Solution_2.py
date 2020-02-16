@@ -184,14 +184,143 @@ class Solution_2:
         words = s.split(" ")
         return len(words[-1])
 
+    # 59 https://leetcode.com/problems/spiral-matrix-ii/
+    def generateMatrix(self, n: int) -> List[List[int]]:
+        matrix = [[0] * n for _ in range(n)]
+        direction = [(0, 1), (1, 0), (0, -1), (-1, 0)]
+        visited = set()
+
+        i, j = 0, 0
+        t = n * n
+        d = 0
+        while len(visited) != t:
+            visited.add((i, j))
+            matrix[i][j] = len(visited)
+            next_i = i + direction[d][0]
+            next_j = j + direction[d][1]
+            if next_i < 0 or next_i >= n or next_j < 0 or next_j >= n or (
+                    next_i, next_j) in visited:
+                d = (d + 1) % 4
+            i += direction[d][0]
+            j += direction[d][1]
+
+        return matrix
+
+    # 60 https://leetcode.com/problems/permutation-sequence/
+    def getPermutation(self, n: int, k: int) -> str:
+        factorials, nums = [1], ['1']
+        for i in range(1, n):
+            factorials.append(factorials[i - 1] * i)
+            nums.append(str(i + 1))
+
+        k -= 1
+
+        res = []
+        for i in range(n - 1, -1, -1):
+            idx = k // factorials[i]
+            k -= idx * factorials[i]
+
+            res.append(nums[idx])
+            del nums[idx]
+
+        return ''.join(res)
+
+    # 61 https://leetcode.com/problems/rotate-list/
+    def rotateRight(self, head: ListNode, k: int) -> ListNode:
+        if not head:
+            return head
+
+        cur = head
+        length = 1
+        while cur.next:
+            length += 1
+            cur = cur.next
+
+        k = k % length
+        if k == 0:
+            return head
+
+        pre = None
+        new_head = head
+        for i in range(length - k):
+            pre = new_head
+            new_head = new_head.next
+
+        pre.next = None
+        cur = new_head
+        while cur.next:
+            cur = cur.next
+
+        cur.next = head
+
+    # 62 https://leetcode.com/problems/unique-paths/
+    def uniquePaths(self, m: int, n: int) -> int:
+        dp = [[1] * n for _ in range(m)]
+
+        for i in range(1, m):
+            for j in range(1, n):
+                dp[i][j] = dp[i - 1][j] + dp[i][j - 1]
+
+        return dp[m - 1][n - 1]
+
+    # 63 https://leetcode.com/problems/unique-paths-ii/
+    def uniquePathsWithObstacles(self, obstacleGrid: List[List[int]]) -> int:
+        m = len(obstacleGrid)
+        n = len(obstacleGrid[0])
+
+        dp = [[0] * n for _ in range(m)]
+
+        if obstacleGrid[0][0] == 0:
+            dp[0][0] = 1
+
+        for i in range(m):
+            for j in range(n):
+                if obstacleGrid[i][j] == 1:
+                    continue
+                if i > 0:
+                    dp[i][j] += dp[i - 1][j]
+                if j > 0:
+                    dp[i][j] += dp[i][j - 1]
+
+        return dp[m - 1][n - 1]
+
+    # 64 https://leetcode.com/problems/minimum-path-sum/
+    def minPathSum(self, grid: List[List[int]]) -> int:
+        m = len(grid)
+        n = len(grid[0])
+
+        dp = [[0] * n for _ in range(m)]
+
+        for i in range(m):
+            for j in range(n):
+                dp[i][j] = grid[i][j]
+                if i == 0 and j == 0:
+                    continue
+                if i == 0:
+                    dp[i][j] += dp[i][j - 1]
+                elif j == 0:
+                    dp[i][j] += dp[i - 1][j]
+                else:
+                    dp[i][j] += min(dp[i][j - 1], dp[i - 1][j])
+
+        return dp[m - 1][n - 1]
+
+    # 65 https://leetcode.com/problems/valid-number/
+    def isNumber(self, s: str) -> bool:
+        # https://leetcode.com/problems/valid-number/discuss/348874/Python-3-Regex-with-example
+        import re
+        #Example:               +-     1 or 1. or 1.2 or .2   e +- 1
+        engine = re.compile(r"^[+-]?((\d+\.?\d*)|(\d*\.?\d+))(e[+-]?\d+)?$")
+        return engine.match(s.strip(" "))
+
 
 if __name__ == "__main__":
     solution = Solution_2()
     # nums = [0, 1]
-    matrix = [[1, 3], [4, 5]]
+    # matrix = [[1, 3], [4, 5]]
     # target = 18
     # s = "()()"
-    words = ["foo", "bar", "oof"]
+    # words = ["foo", "bar", "oof"]
 
-    res = solution.merge(matrix)
+    res = solution.generateMatrix(2)
     print(res)
