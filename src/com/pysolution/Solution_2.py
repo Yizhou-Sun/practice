@@ -313,6 +313,88 @@ class Solution_2:
         engine = re.compile(r"^[+-]?((\d+\.?\d*)|(\d*\.?\d+))(e[+-]?\d+)?$")
         return engine.match(s.strip(" "))
 
+    # 66 https://leetcode.com/problems/plus-one/
+    def plusOne(self, digits: List[int]) -> List[int]:
+        carrier = 1
+        n = len(digits) - 1
+
+        for i in range(n, -1, -1):
+            if carrier == 0:
+                break
+            sum_val = carrier + digits[i]
+            carrier = sum_val // 10
+            remainder = sum_val % 10
+            digits[i] = remainder
+
+        if carrier != 0:
+            digits.insert(0, carrier)
+
+        return digits
+
+    # 67 https://leetcode.com/problems/add-binary/
+    def addBinary(self, a: str, b: str) -> str:
+        res = []
+
+        if len(a) < len(b):
+            a, b = b, a
+
+        a = list(reversed(a))
+        b = list(reversed(b))
+
+        carrier = 0
+        for i in range(len(b)):
+            sum_val = int(a[i]) + int(b[i]) + carrier
+            remainder = sum_val % 2
+            carrier = sum_val // 2
+            res.insert(0, str(remainder))
+
+        for i in range(len(b), len(a)):
+            sum_val = int(a[i]) + carrier
+            remainder = sum_val % 2
+            carrier = sum_val // 2
+            res.insert(0, str(remainder))
+
+        if carrier != 0:
+            res.insert(0, "1")
+
+        return "".join(res)
+
+    # 68 https://leetcode.com/problems/text-justification/
+    def fullJustify(self, words, maxWidth):
+        res, cur, num_of_letters = [], [], 0
+        for w in words:
+            if num_of_letters + len(w) + len(cur) > maxWidth:
+                for i in range(maxWidth - num_of_letters):
+                    cur[i % (len(cur) - 1 or 1)] += ' '
+                res.append(''.join(cur))
+                cur, num_of_letters = [], 0
+            cur += [w]
+            num_of_letters += len(w)
+        return res + [' '.join(cur).ljust(maxWidth)]
+
+    # 69 https://leetcode.com/problems/sqrtx/
+    def mySqrt(self, x: int) -> int:
+        i, j = 1, x
+
+        while i <= j:
+            mid = (i + j) // 2
+
+            small_sqr = mid**2
+            large_sqr = (mid + 1)**2
+
+            if small_sqr > x:
+                j = mid - 1
+            elif large_sqr <= x:
+                i = mid + 1
+            else:
+                return mid
+
+        return j
+
+    # 70 https://leetcode.com/problems/climbing-stairs/
+    def climbStairs(self, n: int) -> int:
+        pass
+
 
 if __name__ == "__main__":
     solution = Solution_2()
