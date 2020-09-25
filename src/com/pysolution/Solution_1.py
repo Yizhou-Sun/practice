@@ -2,7 +2,7 @@ import sys
 import bisect
 
 from typing import List
-from Structure import ListNode
+from .Structure import ListNode
 
 
 class Solution_1:
